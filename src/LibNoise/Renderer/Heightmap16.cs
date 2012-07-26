@@ -29,10 +29,9 @@ namespace LibNoise.Renderer
         /// </summary>
         public Heightmap16()
         {
-            _borderValue = ushort.MinValue;
+            BorderValue = ushort.MinValue;
             AllocateBuffer();
         }
-
 
         /// <summary>
         /// Create a new Heightmap16 with the given values
@@ -43,10 +42,9 @@ namespace LibNoise.Renderer
         /// <param name="height">The height of the new noise map</param>
         public Heightmap16(int width, int height)
         {
-            _borderValue = ushort.MinValue;
+            BorderValue = ushort.MinValue;
             AllocateBuffer(width, height);
         }
-
 
         /// <summary>
         /// Copy constructor
@@ -54,7 +52,7 @@ namespace LibNoise.Renderer
         /// <param name="copy">The heightmap to copy</param>
         public Heightmap16(Heightmap16 copy)
         {
-            _borderValue = ushort.MinValue;
+            BorderValue = ushort.MinValue;
             CopyFrom(copy);
         }
 
@@ -65,25 +63,24 @@ namespace LibNoise.Renderer
         /// <summary>
         /// Find the lowest and highest value in the map
         /// </summary>
-        /// Cannot implement this method in DataMap because 
-        /// T < T or T > T does not compile (Unpredictable type of T)
         /// <param name="min">the lowest value</param>
         /// <param name="max">the highest value</param>
         public void MinMax(out ushort min, out ushort max)
         {
             min = max = 0;
+            ushort[] data = Data;
 
-            if (_data != null && _data.Length > 0)
+            if (data != null && data.Length > 0)
             {
                 // First value, min and max for now
-                min = max = _data[0];
+                min = max = data[0];
 
-                for (int i = 0; i < _data.Length; i++)
+                for (int i = 0; i < data.Length; i++)
                 {
-                    if (min > _data[i])
-                        min = _data[i];
-                    else if (max < _data[i])
-                        max = _data[i];
+                    if (min > data[i])
+                        min = data[i];
+                    else if (max < data[i])
+                        max = data[i];
                 }
             }
         }
@@ -102,7 +99,6 @@ namespace LibNoise.Renderer
             return 16;
         }
 
-
         /// <summary>
         /// Return the maximum value of a ushort type (65535)
         /// </summary>
@@ -111,7 +107,6 @@ namespace LibNoise.Renderer
         {
             return ushort.MaxValue;
         }
-
 
         /// <summary>
         /// Return the minimum value of a ushort type (0)

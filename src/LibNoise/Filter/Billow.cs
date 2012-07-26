@@ -31,9 +31,7 @@ namespace LibNoise.Filter
     /// function. Optionally, a scaling factor and a bias addition can be applied 
     /// each octave.
     /// 
-    /// The original noise::module::billow has scale of 2 and a bias of -1
-    /// 
-    ///
+    /// The original noise::module::billow has scale of 2 and a bias of -1.
     /// </summary>
     public class Billow : FilterModule, IModule3D, IModule2D
     {
@@ -43,13 +41,13 @@ namespace LibNoise.Filter
         /// Default scale
         /// noise module.
         /// </summary>
-        public const float DEFAULT_SCALE = 1.0f;
+        public const float DefaultScale = 1.0f;
 
         /// <summary>
         /// Default bias
         /// noise module.
         /// </summary>
-        public const float DEFAULT_BIAS = 0.0f;
+        public const float DefaultBias = 0.0f;
 
         #endregion
 
@@ -58,33 +56,33 @@ namespace LibNoise.Filter
         /// <summary>
         /// the bias to apply to the scaled output value from the source module.
         /// </summary>
-        protected float _bias = DEFAULT_BIAS;
+        protected float PBias = DefaultBias;
 
         /// <summary>
         /// the scaling factor to apply to the output value from the source module.
         /// </summary>
-        protected float _scale = DEFAULT_SCALE;
+        protected float PScale = DefaultScale;
 
         #endregion
 
         #region Accessors
 
         /// <summary>
-        /// gets or sets the scale value
+        /// Gets or sets the scale value.
         /// </summary>
         public float Scale
         {
-            get { return _scale; }
-            set { _scale = value; }
+            get { return PScale; }
+            set { PScale = value; }
         }
 
         /// <summary>
-        /// gets or sets the bias value
+        /// Gets or sets the bias value.
         /// </summary>
         public float Bias
         {
-            get { return _bias; }
-            set { _bias = value; }
+            get { return PBias; }
+            set { PBias = value; }
         }
 
         #endregion
@@ -124,7 +122,7 @@ namespace LibNoise.Filter
                     signal = -signal;
 
                 // Add the signal to the output value.
-                value += (signal*_scale) + _bias;
+                value += (signal*PScale) + PBias;
 
                 // Go to the next octave.
                 x *= _lacunarity;
@@ -134,7 +132,7 @@ namespace LibNoise.Filter
             //take care of remainder in _octaveCount
             float remainder = _octaveCount - (int) _octaveCount;
             if (remainder > 0)
-                value += (_scale*remainder*_source2D.GetValue(x, y)*_spectralWeights[curOctave]) + _bias;
+                value += (PScale*remainder*_source2D.GetValue(x, y)*_spectralWeights[curOctave]) + PBias;
 
             return value;
         }
@@ -152,8 +150,6 @@ namespace LibNoise.Filter
         /// <returns>The resulting output value.</returns>
         public float GetValue(float x, float y, float z)
         {
-            float signal;
-            float value;
             int curOctave;
 
             x *= _frequency;
@@ -161,19 +157,19 @@ namespace LibNoise.Filter
             z *= _frequency;
 
             // Initialize value, fBM starts with 0
-            value = 0;
+            float value = 0;
 
             // Inner loop of spectral construction, where the fractal is built
             for (curOctave = 0; curOctave < _octaveCount; curOctave++)
             {
                 // Get the coherent-noise value.
-                signal = _source3D.GetValue(x, y, z)*_spectralWeights[curOctave];
+                float signal = _source3D.GetValue(x, y, z)*_spectralWeights[curOctave];
 
                 if (signal < 0.0f)
                     signal = -signal;
 
                 // Add the signal to the output value.
-                value += (signal*_scale) + _bias;
+                value += (signal*PScale) + PBias;
 
                 // Go to the next octave.
                 x *= _lacunarity;
@@ -184,7 +180,7 @@ namespace LibNoise.Filter
             //take care of remainder in _octaveCount
             float remainder = _octaveCount - (int) _octaveCount;
             if (remainder > 0.0f)
-                value += (_scale*remainder*_source3D.GetValue(x, y, z)*_spectralWeights[curOctave]) + _bias;
+                value += (PScale*remainder*_source3D.GetValue(x, y, z)*_spectralWeights[curOctave]) + PBias;
 
             return value;
         }

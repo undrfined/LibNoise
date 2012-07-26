@@ -18,6 +18,7 @@
 namespace LibNoise.Builder
 {
     using System;
+    using System.Diagnostics;
     using LibNoise.Model;
 
     /// <summary>
@@ -203,54 +204,54 @@ namespace LibNoise.Builder
                     "Incoherent bounds : lowerXBound >= upperXBound or lowerZBound >= upperZBound");
             }
 
-            if (_width < 0 || _height < 0)
+            if (PWidth < 0 || PHeight < 0)
                 throw new ArgumentException("Dimension must be greater or equal 0");
 
-            if (_sourceModule == null)
+            if (PSourceModule == null)
                 throw new ArgumentException("A source module must be provided");
 
-            if (_noiseMap == null)
+            if (PNoiseMap == null)
                 throw new ArgumentException("A noise map must be provided");
 
             // Resize the destination noise map so that it can store the new output
             // values from the source model.
-            _noiseMap.SetSize(_width, _height);
+            PNoiseMap.SetSize(PWidth, PHeight);
 
             // Create the plane model.
-            var model = new Plane(_sourceModule);
+            var model = new Plane(PSourceModule);
 
             float xExtent = _upperXBound - _lowerXBound;
             float zExtent = _upperZBound - _lowerZBound;
-            float xDelta = xExtent/_width;
-            float zDelta = zExtent/_height;
+            float xDelta = xExtent/PWidth;
+            float zDelta = zExtent/PHeight;
             float xCur = _lowerXBound;
             float zCur = _lowerZBound;
 
             // Fill every point in the noise map with the output values from the model.
-            for (int z = 0; z < _height; z++)
+            for (int z = 0; z < PHeight; z++)
             {
                 xCur = _lowerXBound;
 
-                for (int x = 0; x < _width; x++)
+                for (int x = 0; x < PWidth; x++)
                 {
                     float finalValue;
                     var level = FilterLevel.Source;
 
-                    if (_filter != null)
-                        level = _filter.IsFiltered(x, z);
+                    if (PFilter != null)
+                        level = PFilter.IsFiltered(x, z);
 
                     if (level == FilterLevel.Constant)
-                        finalValue = _filter.ConstantValue;
+                    {
+                        finalValue = PFilter.ConstantValue;
+                    }
                     else
                     {
                         if (_seamless)
                         {
-                            float swValue, seValue, nwValue, neValue;
-
-                            swValue = model.GetValue(xCur, zCur);
-                            seValue = model.GetValue(xCur + xExtent, zCur);
-                            nwValue = model.GetValue(xCur, zCur + zExtent);
-                            neValue = model.GetValue(xCur + xExtent, zCur + zExtent);
+                            float swValue = model.GetValue(xCur, zCur);
+                            float seValue = model.GetValue(xCur + xExtent, zCur);
+                            float nwValue = model.GetValue(xCur, zCur + zExtent);
+                            float neValue = model.GetValue(xCur + xExtent, zCur + zExtent);
 
                             float xBlend = 1.0f - ((xCur - _lowerXBound)/xExtent);
                             float zBlend = 1.0f - ((zCur - _lowerZBound)/zExtent);
@@ -263,25 +264,21 @@ namespace LibNoise.Builder
                         else
                             finalValue = model.GetValue(xCur, zCur);
 
-                        if (level == FilterLevel.Filter)
-                            finalValue = _filter.FilterValue(x, z, finalValue);
+                        if (level == FilterLevel.Filter && PFilter != null)
+                            finalValue = PFilter.FilterValue(x, z, finalValue);
                     }
 
-                    _noiseMap.SetValue(x, z, finalValue);
+                    PNoiseMap.SetValue(x, z, finalValue);
 
                     xCur += xDelta;
                 }
 
                 zCur += zDelta;
 
-                if (_callBack != null)
-                    _callBack(z);
+                if (PCallBack != null)
+                    PCallBack(z);
             }
         }
-
-        #endregion
-
-        #region Internal
 
         #endregion
     }

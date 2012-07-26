@@ -48,21 +48,19 @@ namespace LibNoise.Filter
         /// <returns>The resulting output value.</returns>
         public float GetValue(float x, float y)
         {
-            float signal;
-            float value;
             int curOctave;
 
             x *= _frequency;
             y *= _frequency;
 
             // Initialize value
-            value = 1.0f; // StrandardMultiFractal starts with 1
+            float value = 1.0f;
 
             // inner loop of spectral construction, where the fractal is built
             for (curOctave = 0; curOctave < _octaveCount; curOctave++)
             {
                 // Get the coherent-noise value.
-                signal = _offset + (_source2D.GetValue(x, y)*_spectralWeights[curOctave]);
+                float signal = _offset + (_source2D.GetValue(x, y)*_spectralWeights[curOctave]);
 
                 // Add the signal to the output value.
                 value *= signal;
@@ -94,8 +92,6 @@ namespace LibNoise.Filter
         /// <returns>The resulting output value.</returns>
         public float GetValue(float x, float y, float z)
         {
-            float signal;
-            float value;
             int curOctave;
 
             x *= _frequency;
@@ -103,13 +99,13 @@ namespace LibNoise.Filter
             z *= _frequency;
 
             // Initialize value
-            value = 1.0f; // StrandardMultiFractal starts with 1
+            float value = 1.0f;
 
             // inner loop of spectral construction, where the fractal is built
             for (curOctave = 0; curOctave < _octaveCount; curOctave++)
             {
                 // Get the coherent-noise value.
-                signal = _offset + (_source3D.GetValue(x, y, z)*_spectralWeights[curOctave]);
+                float signal = _offset + (_source3D.GetValue(x, y, z)*_spectralWeights[curOctave]);
 
                 // Add the signal to the output value.
                 value *= signal;

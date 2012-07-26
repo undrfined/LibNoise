@@ -19,7 +19,9 @@ namespace LibNoise.Demo.Ext.Dotnet
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.Runtime.InteropServices;
+
     using LibNoise.Renderer;
+
     using Color = LibNoise.Renderer.Color;
 
     /// <summary>
@@ -41,44 +43,44 @@ namespace LibNoise.Demo.Ext.Dotnet
         /// <summary>
         /// The bitmap
         /// </summary>
-        protected Bitmap Adaptatee;
+        private readonly Bitmap _adaptatee;
+
+        /// <summary>
+        /// The height of the map, internal use
+        /// </summary>
+        private readonly int _height;
+
+        /// <summary>
+        /// The width of the map, internal use
+        /// </summary>
+        private readonly int _width;
 
         /// <summary>
         /// Flags that indicates if some bitmap changes need to be applied.
         /// As is an expansive operation, BitmapAdaptater.apply is only called
         /// in the Bitmap accessor if changes have been previously done
         /// </summary>
-        protected bool BitsLocked = false;
+        private bool _bitsLocked;
 
         /// <summary>
         /// Bitmap information
         /// </summary>
-        protected BitmapData BmData;
+        private BitmapData _bmData;
 
         /// <summary>
         /// The value used for all positions outside of the map.
         /// </summary>
-        protected IColor _borderValue;
+        private IColor _borderValue;
 
         /// <summary>
         /// Internal data buffer for performances purpose
         /// </summary>
-        protected byte[] Data;
-
-        /// <summary>
-        /// The height of the map, internal use
-        /// </summary>
-        protected int _height = 0;
+        private byte[] _data;
 
         /// <summary>
         /// Size in byte of one pixel data
         /// </summary>
-        protected byte _structSize = 1;
-
-        /// <summary>
-        /// The width of the map, internal use
-        /// </summary>
-        protected int _width = 0;
+        private byte _structSize = 1;
 
         #endregion
 
@@ -91,16 +93,16 @@ namespace LibNoise.Demo.Ext.Dotnet
         {
             get
             {
-                if (BitsLocked)
+                if (_bitsLocked)
                     Apply();
 
-                return Adaptatee;
+                return _adaptatee;
             }
             /*
 			set { 
 				_adaptatee = value; 
-				_width = _adaptatee.Width;
-				_height = _adaptatee.Height;
+				PWidth = _adaptatee.Width;
+				PHeight = _adaptatee.Height;
 			}
 			*/
         }
@@ -113,7 +115,6 @@ namespace LibNoise.Demo.Ext.Dotnet
             get { return _width; }
         }
 
-
         /// <summary>
         /// Gets the height of the map
         /// </summary>
@@ -121,7 +122,6 @@ namespace LibNoise.Demo.Ext.Dotnet
         {
             get { return _height; }
         }
-
 
         /// <summary>
         /// Gets the border value of the map
@@ -156,15 +156,14 @@ namespace LibNoise.Demo.Ext.Dotnet
                     throw new ArgumentException("Unsupported image format : " + bitmap.PixelFormat.ToString());
             }
 
-            Adaptatee = bitmap;
-            _borderValue = Color.WHITE;
+            _adaptatee = bitmap;
+            _borderValue = Colors.White;
 
-            _width = Adaptatee.Width;
-            _height = Adaptatee.Height;
+            _width = _adaptatee.Width;
+            _height = _adaptatee.Height;
 
             AllocateBuffer();
         }
-
 
         /// <summary>
         /// Create a new Bitmap with the given values
@@ -173,11 +172,11 @@ namespace LibNoise.Demo.Ext.Dotnet
         /// <param name="height">The height of the new bitmap</param>
         public BitmapAdaptater(int width, int height)
         {
-            Adaptatee = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            _borderValue = Color.WHITE;
+            _adaptatee = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            _borderValue = Colors.White;
 
-            _width = Adaptatee.Width;
-            _height = Adaptatee.Height;
+            _width = _adaptatee.Width;
+            _height = _adaptatee.Height;
 
             AllocateBuffer();
         }
@@ -196,44 +195,43 @@ namespace LibNoise.Demo.Ext.Dotnet
         /// <param name="y">The y coordinate of the position</param>
         public IColor GetValue(int x, int y)
         {
-            if (Adaptatee != null
+            if (_adaptatee != null
                 && (x >= 0 && x < _width)
                 && (y >= 0 && y < _height)
                 )
             {
-                if (BitsLocked)
+                if (_bitsLocked)
                 {
                     // Noise.Image start to bottom left
                     // Drawing.Bitmap start to top left
-                    int indexBase = BmData.Stride*(_height - 1 - y) + x*_structSize;
+                    int indexBase = _bmData.Stride*(_height - 1 - y) + x*_structSize;
 
-                    switch (BmData.PixelFormat)
+                    switch (_bmData.PixelFormat)
                     {
                         case PixelFormat.Format8bppIndexed: //R
-                            return new Color(Data[indexBase], Data[indexBase], Data[indexBase], 255);
+                            return new Color(_data[indexBase], _data[indexBase], _data[indexBase], 255);
 
                         case PixelFormat.Format24bppRgb: // RGB
                         case PixelFormat.Format32bppRgb: // RGB_
-                            return new Color(Data[indexBase + 2], Data[indexBase + 1], Data[indexBase], 255);
+                            return new Color(_data[indexBase + 2], _data[indexBase + 1], _data[indexBase], 255);
 
                         case PixelFormat.Canonical: //RGBA
                         case PixelFormat.Format32bppArgb: //RGBA
-                            return new Color(Data[indexBase + 2], Data[indexBase + 1], Data[indexBase],
-                                Data[indexBase + 3]);
+                            return new Color(_data[indexBase + 2], _data[indexBase + 1], _data[indexBase],
+                                _data[indexBase + 3]);
                     }
                 }
                 else
                 {
                     // Noise.Image start to bottom left
                     // Drawing.Bitmap start to top left
-                    System.Drawing.Color sysColor = Adaptatee.GetPixel(x, _height - 1 - y);
+                    System.Drawing.Color sysColor = _adaptatee.GetPixel(x, _height - 1 - y);
                     return new Color(sysColor.R, sysColor.G, sysColor.B, sysColor.A);
                 }
             }
 
             return _borderValue;
         }
-
 
         /// <summary>
         /// Sets the new size for the map.
@@ -243,10 +241,9 @@ namespace LibNoise.Demo.Ext.Dotnet
         /// <param name="height">height The new height for the bitmap</param>
         public void SetSize(int width, int height)
         {
-            if (Adaptatee.Width != width || Adaptatee.Height != height)
+            if (_adaptatee.Width != width || _adaptatee.Height != height)
                 throw new NotImplementedException("System.Drawing.Bitmap does not support resize");
         }
-
 
         /// <summary>
         /// Resets the bitmap
@@ -255,7 +252,6 @@ namespace LibNoise.Demo.Ext.Dotnet
         {
             throw new NotImplementedException();
         }
-
 
         /// <summary>
         /// Clears the bitmap to a Color.WHITE value
@@ -276,45 +272,45 @@ namespace LibNoise.Demo.Ext.Dotnet
         /// <param name="value">The value to set at the given position</param>
         public void SetValue(int x, int y, IColor value)
         {
-            if (Adaptatee != null
+            if (_adaptatee != null
                 && (x >= 0 && x < _width)
                 && (y >= 0 && y < _height)
                 )
             {
-                if (BitsLocked)
+                if (_bitsLocked)
                 {
                     // Noise.Image start to bottom left
                     // Drawing.Bitmap start to top left
-                    int indexBase = BmData.Stride*(_height - 1 - y) + x*_structSize;
+                    int indexBase = _bmData.Stride*(_height - 1 - y) + x*_structSize;
 
-                    switch (BmData.PixelFormat)
+                    switch (_bmData.PixelFormat)
                     {
                         case PixelFormat.Format8bppIndexed: //R
-                            Data[indexBase] = value.Red;
+                            _data[indexBase] = value.Red;
 
                             break;
 
                         case PixelFormat.Format24bppRgb: // RGB
-                            Data[indexBase] = value.Blue;
-                            Data[indexBase + 1] = value.Green;
-                            Data[indexBase + 2] = value.Red;
+                            _data[indexBase] = value.Blue;
+                            _data[indexBase + 1] = value.Green;
+                            _data[indexBase + 2] = value.Red;
 
                             break;
 
                         case PixelFormat.Format32bppRgb: // RGB_
-                            Data[indexBase] = value.Blue;
-                            Data[indexBase + 1] = value.Green;
-                            Data[indexBase + 2] = value.Red;
-                            Data[indexBase + 3] = 255;
+                            _data[indexBase] = value.Blue;
+                            _data[indexBase + 1] = value.Green;
+                            _data[indexBase + 2] = value.Red;
+                            _data[indexBase + 3] = 255;
 
                             break;
 
                         case PixelFormat.Canonical: //RGBA
                         case PixelFormat.Format32bppArgb: //RGBA
-                            Data[indexBase] = value.Blue;
-                            Data[indexBase + 1] = value.Green;
-                            Data[indexBase + 2] = value.Red;
-                            Data[indexBase + 3] = value.Alpha;
+                            _data[indexBase] = value.Blue;
+                            _data[indexBase + 1] = value.Green;
+                            _data[indexBase + 2] = value.Red;
+                            _data[indexBase + 3] = value.Alpha;
 
                             break;
                     }
@@ -323,9 +319,9 @@ namespace LibNoise.Demo.Ext.Dotnet
                 {
                     // Noise.Image start to bottom left
                     // Drawing.Bitmap start to top left
-                    Adaptatee.SetPixel(
+                    _adaptatee.SetPixel(
                         x,
-                        Adaptatee.Height - 1 - y,
+                        _adaptatee.Height - 1 - y,
                         System.Drawing.Color.FromArgb(value.Alpha, value.Red, value.Green, value.Blue)
                         );
                 }
@@ -342,7 +338,6 @@ namespace LibNoise.Demo.Ext.Dotnet
             throw new NotImplementedException();
         }
 
-
         /// <summary>
         /// Find the lowest and highest value in the map
         /// </summary>
@@ -358,16 +353,16 @@ namespace LibNoise.Demo.Ext.Dotnet
         #region Internal
 
         /// <summary>
-        /// Allocate a buffer
+        /// Allocate a buffer.
         /// </summary>
         protected void AllocateBuffer()
         {
-            if (BitsLocked)
+            if (_bitsLocked)
                 throw new Exception("Buffer already allocated");
 
             try
             {
-                switch (Adaptatee.PixelFormat)
+                switch (_adaptatee.PixelFormat)
                 {
                     case PixelFormat.Canonical: //RGBA
                     case PixelFormat.Format32bppRgb: // RGB_
@@ -384,26 +379,26 @@ namespace LibNoise.Demo.Ext.Dotnet
                         break;
 
                     default:
-                        throw new ArgumentException("Unsupported image format : " + Adaptatee.PixelFormat.ToString());
+                        throw new ArgumentException("Unsupported image format : " + _adaptatee.PixelFormat.ToString());
                 }
 
                 // Lock memory region
                 var region = new Rectangle(0, 0, _width, _height);
-                BmData = Adaptatee.LockBits(region, ImageLockMode.ReadWrite, Adaptatee.PixelFormat);
+                _bmData = _adaptatee.LockBits(region, ImageLockMode.ReadWrite, _adaptatee.PixelFormat);
 
                 // BitmapData.Stride could be a negative number
-                int size = Math.Abs(BmData.Stride)*_height;
+                int size = Math.Abs(_bmData.Stride)*_height;
 
                 // Create buffer
-                if (Data == null)
-                    Data = new byte[size];
+                if (_data == null)
+                    _data = new byte[size];
                 else
-                    Array.Resize(ref Data, size);
+                    Array.Resize(ref _data, size);
 
                 // Memcopy
-                Marshal.Copy(BmData.Scan0, Data, 0, size);
+                Marshal.Copy(_bmData.Scan0, _data, 0, size);
 
-                BitsLocked = true;
+                _bitsLocked = true;
             }
             catch (Exception e)
             {
@@ -411,26 +406,25 @@ namespace LibNoise.Demo.Ext.Dotnet
             }
         }
 
-
         /// <summary>
         /// 
         /// </summary>
         protected void Apply()
         {
-            if (!BitsLocked)
+            if (!_bitsLocked)
                 throw new Exception("Buffer is empty");
 
             try
             {
                 // Memcopy
-                Marshal.Copy(Data, 0, BmData.Scan0, Data.Length);
+                Marshal.Copy(_data, 0, _bmData.Scan0, _data.Length);
 
                 // Unlock region
-                Adaptatee.UnlockBits(BmData);
+                _adaptatee.UnlockBits(_bmData);
 
-                BitsLocked = true;
-                BmData = null;
-                Data = null;
+                _bitsLocked = true;
+                _bmData = null;
+                _data = null;
             }
             catch (Exception e)
             {

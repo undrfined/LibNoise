@@ -20,6 +20,7 @@ namespace LibNoise.Demo
     using System.Drawing;
     using System.Globalization;
     using System.Windows.Forms;
+
     using LibNoise.Builder;
     using LibNoise.Demo.Ext.Dotnet;
     using LibNoise.Filter;
@@ -29,21 +30,18 @@ namespace LibNoise.Demo
 
     public partial class FrmMain : Form
     {
-        private Bitmap _bitmap;
-
         public FrmMain()
         {
             InitializeComponent();
 
 #if DEBUG
-            Text = String.Format("libnoise-dotnet {0} - demo (DEBUG)", Libnoise.VERSION);
+            Text = String.Format("libnoise-dotnet {0} - demo (DEBUG)", Libnoise.Version);
 #else
-			this.Text = String.Format("libnoise-dotnet {0} - demo", Libnoise.VERSION);
+            Text = String.Format("libnoise-dotnet {0} - demo", Libnoise.Version);
 #endif
 
-
             // Primitive
-            _tbxSeed.Text = PrimitiveModule.DEFAULT_SEED.ToString();
+            _tbxSeed.Text = PrimitiveModule.DefaultSeed.ToString();
             _cbxPrimitive.Items.AddRange(Enum.GetNames(typeof (NoisePrimitive)));
             _cbxPrimitive.SelectedItem = Enum.GetName(typeof (NoisePrimitive), NoisePrimitive.ImprovedPerlin);
 
@@ -74,7 +72,6 @@ namespace LibNoise.Demo
             _lblProgressPercent.Visible = false;
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -83,7 +80,7 @@ namespace LibNoise.Demo
             EnabledInterface(false);
 
             // Parse input ------------------------------------------------------------------------------------
-            int seed = ParseInt(_tbxSeed.Text, PrimitiveModule.DEFAULT_SEED);
+            int seed = ParseInt(_tbxSeed.Text, PrimitiveModule.DefaultSeed);
             float frequency = ParseFloat(_tbxFrequency.Text, FilterModule.DEFAULT_FREQUENCY);
             float lacunarity = ParseFloat(_tbxLacunarity.Text, FilterModule.DEFAULT_LACUNARITY);
             float gain = ParseFloat(_tbxGain.Text, FilterModule.DEFAULT_GAIN);
@@ -92,8 +89,8 @@ namespace LibNoise.Demo
             var octaveCount = (int) _nstpOctave.Value;
             bool seamless = _chkbx.Checked;
 
-            GradientColor gradient = GradientColor.GRAYSCALE;
-            NoiseQuality quality = PrimitiveModule.DEFAULT_QUALITY;
+            GradientColor gradient = GradientColors.Grayscale;
+            NoiseQuality quality = PrimitiveModule.DefaultQuality;
             var primitive = NoisePrimitive.ImprovedPerlin;
             var filter = NoiseFilter.SumFractal;
 
@@ -154,11 +151,11 @@ namespace LibNoise.Demo
             switch (_cbxGradient.Text)
             {
                 case "Grayscale":
-                    gradient = GradientColor.GRAYSCALE;
+                    gradient = GradientColors.Grayscale;
                     break;
 
                 case "Terrain":
-                    gradient = GradientColor.TERRAIN;
+                    gradient = GradientColors.Terrain;
                     break;
             }
 
@@ -547,7 +544,6 @@ namespace LibNoise.Demo
             _lblProgressPercent.Visible = false;
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -571,7 +567,6 @@ namespace LibNoise.Demo
             _btnStart.Enabled = enabled;
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -593,7 +588,6 @@ namespace LibNoise.Demo
                 return defaultValue;
             }
         }
-
 
         /// <summary>
         /// 
@@ -618,7 +612,6 @@ namespace LibNoise.Demo
                 return defaultValue;
             }
         }
-
 
         /// <summary>
         /// 
@@ -662,7 +655,6 @@ namespace LibNoise.Demo
                 e.Handled = true;
             }
         }
-
 
         /// <summary>
         /// 
@@ -714,7 +706,6 @@ namespace LibNoise.Demo
                 e.Handled = true;
             }
         }
-
 
         private void _tbxSeed_KeyPress(object sender, KeyPressEventArgs e)
         {

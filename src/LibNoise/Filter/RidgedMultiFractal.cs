@@ -54,7 +54,7 @@ namespace LibNoise.Filter
         #region Ctor/Dtor
 
         /// <summary>
-        /// 0-args constructor
+        /// 0-args constructor.
         /// </summary>
         public RidgedMultiFractal()
         {
@@ -77,16 +77,13 @@ namespace LibNoise.Filter
         /// <returns>The resulting output value.</returns>
         public float GetValue(float x, float y)
         {
-            float signal;
-            float value;
-            float weight;
             int curOctave;
 
             x *= _frequency;
             y *= _frequency;
 
             // Initialize value : 1st octave
-            signal = _source2D.GetValue(x, y);
+            float signal = _source2D.GetValue(x, y);
 
             // get absolute value of signal (this creates the ridges)
             if (signal < 0.0f)
@@ -99,9 +96,9 @@ namespace LibNoise.Filter
             signal *= signal;
 
             // Add the signal to the output value.
-            value = signal;
+            float value = signal;
 
-            weight = 1.0f;
+            float weight = 1.0f;
 
             for (curOctave = 1; weight > 0.001 && curOctave < _octaveCount; curOctave++)
             {
@@ -148,9 +145,6 @@ namespace LibNoise.Filter
         /// <returns>The resulting output value.</returns>
         public float GetValue(float x, float y, float z)
         {
-            float signal;
-            float value;
-            float weight;
             int curOctave;
 
             x *= _frequency;
@@ -158,7 +152,7 @@ namespace LibNoise.Filter
             z *= _frequency;
 
             // Initialize value : 1st octave
-            signal = _source3D.GetValue(x, y, z);
+            float signal = _source3D.GetValue(x, y, z);
 
             // get absolute value of signal (this creates the ridges)
             if (signal < 0.0)
@@ -171,9 +165,9 @@ namespace LibNoise.Filter
             signal *= signal;
 
             // Add the signal to the output value.
-            value = signal;
+            float value = signal;
 
-            weight = 1.0f;
+            float weight = 1.0f;
 
             for (curOctave = 1; weight > 0.001 && curOctave < _octaveCount; curOctave++)
             {

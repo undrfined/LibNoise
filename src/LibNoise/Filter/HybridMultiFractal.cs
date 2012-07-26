@@ -71,16 +71,14 @@ namespace LibNoise.Filter
         public float GetValue(float x, float y)
         {
             float signal;
-            float value;
-            float weight;
             int curOctave;
 
             x *= _frequency;
             y *= _frequency;
 
             // Initialize value : get first octave of function; later octaves are weighted
-            value = _source2D.GetValue(x, y) + _offset;
-            weight = _gain*value;
+            float value = _source2D.GetValue(x, y) + _offset;
+            float weight = _gain*value;
 
             x *= _lacunarity;
             y *= _lacunarity;
@@ -137,8 +135,6 @@ namespace LibNoise.Filter
         public float GetValue(float x, float y, float z)
         {
             float signal;
-            float value;
-            float weight;
             int curOctave;
 
             x *= _frequency;
@@ -146,8 +142,8 @@ namespace LibNoise.Filter
             z *= _frequency;
 
             // Initialize value : get first octave of function; later octaves are weighted
-            value = _source3D.GetValue(x, y, z) + _offset;
-            weight = _gain*value;
+            float value = _source3D.GetValue(x, y, z) + _offset;
+            float weight = _gain*value;
 
             x *= _lacunarity;
             y *= _lacunarity;

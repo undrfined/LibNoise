@@ -46,22 +46,20 @@ namespace LibNoise.Filter
         /// <returns>The resulting output value.</returns>
         public float GetValue(float x, float y)
         {
-            float signal;
-            float value;
             int curOctave;
 
             x *= _frequency;
             y *= _frequency;
 
             // Initialize value, fBM starts with 0
-            value = 0;
+            float value = 0;
 
             // Inner loop of spectral construction, where the fractal is built
 
             for (curOctave = 0; curOctave < _octaveCount; curOctave++)
             {
                 // Get the coherent-noise value.
-                signal = _source2D.GetValue(x, y)*_spectralWeights[curOctave];
+                float signal = _source2D.GetValue(x, y)*_spectralWeights[curOctave];
 
                 // Add the signal to the output value.
                 value += signal;

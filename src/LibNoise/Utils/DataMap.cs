@@ -15,7 +15,6 @@
 // 
 // From the original Jason Bevins's Libnoise (http://libnoise.sourceforge.net)
 
-
 namespace LibNoise.Utils
 {
     using System;
@@ -58,51 +57,34 @@ namespace LibNoise.Utils
     /// the number of values between these two starting points.
     /// 
     /// </summary>
-    public abstract class DataMap<T>
+    public abstract class DataMap<T> where T : IEquatable<T>
     {
         #region Fields
 
         /// <summary>
-        /// The value used for all positions outside of the map.
-        /// All positions outside of the map are assumed to have a
-        /// common value known as the <i>border value</i>.
-        /// </summary>
-        protected T _borderValue;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        protected int _cellsCount = 0;
-
-        /// <summary>
         /// The noise map buffer.
         /// </summary>
-        protected T[] _data = null;
+        private T[] _data;
 
         /// <summary>
-        /// 
+        /// The height of the map.
         /// </summary>
-        protected bool _hasMaxDimension = false;
+        private int _height;
 
         /// <summary>
-        /// The height of the map
+        /// Maximum height.
         /// </summary>
-        protected int _height = 0;
+        private int _maxHeight;
 
         /// <summary>
-        /// 
+        /// Maximum width.
         /// </summary>
-        protected int _maxHeight = 0;
+        private int _maxWidth;
 
         /// <summary>
-        /// 
+        /// The memory used (bits) for this map.
         /// </summary>
-        protected int _maxWidth = 0;
-
-        /// <summary>
-        /// the memory used (bits) for this map.
-        /// </summary>
-        protected int _memoryUsage = 0;
+        private int _memoryUsage;
 
         /// <summary>
         /// The stride amount of the map.
@@ -110,16 +92,16 @@ namespace LibNoise.Utils
         private int _stride;
 
         /// <summary>
-        /// The width of the map
+        /// The width of the map.
         /// </summary>
-        protected int _width = 0;
+        private int _width;
 
         #endregion
 
         #region Accessors
 
         /// <summary>
-        /// Gets the width of the map
+        /// Gets the width of the map.
         /// </summary>
         public int Width
         {
@@ -127,7 +109,7 @@ namespace LibNoise.Utils
         }
 
         /// <summary>
-        /// Getsthe height of the map
+        /// Getsthe height of the map.
         /// </summary>
         public int Height
         {
@@ -146,14 +128,10 @@ namespace LibNoise.Utils
         /// <summary>
         /// Gets or sets the value used for all positions outside of the map.
         /// </summary>
-        public T BorderValue
-        {
-            get { return _borderValue; }
-            set { _borderValue = value; }
-        }
+        public T BorderValue { get; set; }
 
         /// <summary>
-        /// Gets the memory used (bits) for this map
+        /// Gets the memory used (bits) for this map.
         /// </summary>
         public int MemoryUsage
         {
@@ -161,7 +139,7 @@ namespace LibNoise.Utils
         }
 
         /// <summary>
-        /// Gets the memory used (in Kb) for this map
+        /// Gets the memory used (in Kb) for this map.
         /// </summary>
         public float MemoryUsageKb
         {
@@ -169,11 +147,48 @@ namespace LibNoise.Utils
         }
 
         /// <summary>
-        /// Gets the memory used (in Kb) for this map
+        /// Gets the memory used (in Kb) for this map.
         /// </summary>
         public float MemoryUsageMo
         {
             get { return MemoryUsage/8388608.0f; }
+        }
+
+        /// <summary>
+        /// Max height.
+        /// </summary>
+        protected int MaxHeight
+        {
+            get { return _maxHeight; }
+            set { _maxHeight = value; }
+        }
+
+        /// <summary>
+        /// Maximum width.
+        /// </summary>
+        protected int MaxWidth
+        {
+            get { return _maxWidth; }
+            set { _maxWidth = value; }
+        }
+
+        /// <summary>
+        /// Has maximum dimension.
+        /// </summary>
+        protected bool HasMaxDimension { get; set; }
+
+        /// <summary>
+        /// Cells count.
+        /// </summary>
+        protected int CellsCount { get; set; }
+
+        /// <summary>
+        /// The noise map buffer.
+        /// </summary>
+        protected T[] Data
+        {
+            get { return _data; }
+            set { _data = value; }
         }
 
         #endregion
@@ -181,13 +196,12 @@ namespace LibNoise.Utils
         #region Ctor/Dtor
 
         /// <summary>
-        /// Create an empty map
+        /// Create an empty map.
         /// </summary>
-        public DataMap()
+        protected DataMap()
         {
             AllocateBuffer();
         }
-
 
         /// <summary>
         /// Create a new map with the given values
@@ -206,18 +220,17 @@ namespace LibNoise.Utils
         /// </summary>
         /// <param name="width">The width of the new map.</param>
         /// <param name="height">The height of the new map</param>
-        public DataMap(int width, int height)
+        protected DataMap(int width, int height)
         {
             AllocateBuffer(width, height);
         }
-
 
         /// <summary>
         /// Copy constructor
         /// @throw noise::ExceptionOutOfMemory Out of memory.
         /// </summary>
         /// <param name="copy">The map to copy</param>
-        public DataMap(DataMap<T> copy)
+        protected DataMap(DataMap<T> copy)
         {
             CopyFrom(copy);
         }
@@ -228,12 +241,11 @@ namespace LibNoise.Utils
 
         /// <summary>
         /// Returns a copy of a slab.
-        ///
         /// This method returns slab filled with the borderValue 
-        /// if the coordinates exist outside the map
+        /// if the coordinates exist outside the map.
         /// </summary>
-        /// <param name="y">The y coordinate of the position</param>
-        /// <returns>The slab at that position</returns>
+        /// <param name="y">The y coordinate of the position.</param>
+        /// <returns>The slab at that position.</returns>
         public T[] GetSlab(int y)
         {
             var temp = new T[_stride];
@@ -245,12 +257,11 @@ namespace LibNoise.Utils
             else
             {
                 for (int i = 0; i < temp.Length; i++)
-                    temp[i] = _borderValue;
+                    temp[i] = BorderValue;
             }
 
             return temp;
         }
-
 
         /// <summary>
         /// Returns a value from the specified position in the noise map.
@@ -258,9 +269,9 @@ namespace LibNoise.Utils
         /// This method returns the border value if the coordinates exist
         /// outside of the noise map.
         /// </summary>
-        /// <param name="x">The x coordinate of the position</param>
-        /// <param name="y">The y coordinate of the position</param>
-        /// <returns>The value at that position</returns>
+        /// <param name="x">The x coordinate of the position.</param>
+        /// <param name="y">The y coordinate of the position.</param>
+        /// <returns>The value at that position.</returns>
         public T GetValue(int x, int y)
         {
             if (_data != null
@@ -269,9 +280,8 @@ namespace LibNoise.Utils
                 )
                 return _data[y*_stride + x];
 
-            return _borderValue;
+            return BorderValue;
         }
-
 
         /// <summary>
         /// Sets a value at a specified position in the map.
@@ -279,9 +289,9 @@ namespace LibNoise.Utils
         /// This method does nothing if the map object is empty or the
         /// position is outside the bounds of the noise map.
         /// </summary>
-        /// <param name="x">The x coordinate of the position</param>
-        /// <param name="y">The y coordinate of the position</param>
-        /// <param name="value">The value to set at the given position</param>
+        /// <param name="x">The x coordinate of the position.</param>
+        /// <param name="y">The y coordinate of the position.</param>
+        /// <param name="value">The value to set at the given position.</param>
         public void SetValue(int x, int y, T value)
         {
             if (_data != null
@@ -290,7 +300,6 @@ namespace LibNoise.Utils
                 )
                 _data[y*_stride + x] = value;
         }
-
 
         /// <summary>
         /// Sets the new size for the map.
@@ -303,73 +312,69 @@ namespace LibNoise.Utils
         /// unmodified.
         /// 
         /// </summary>
-        /// <param name="width">width The new width for the map</param>
-        /// <param name="height">height The new height for the map</param>
+        /// <param name="width">width The new width for the map.</param>
+        /// <param name="height">height The new height for the map.</param>
         public void SetSize(int width, int height)
         {
             if (width < 0 || height < 0)
                 throw new ArgumentException("Map dimension must be greater or equal 0");
-            else if (_hasMaxDimension && (width > _maxWidth || height > _maxHeight))
+
+            if (HasMaxDimension && (width > _maxWidth || height > _maxHeight))
             {
                 throw new ArgumentException(String.Format("Map dimension must be lower than {0} * {1}", _maxWidth,
                     _maxHeight));
             }
-            else
-                AllocateBuffer(width, height);
-        }
 
+            AllocateBuffer(width, height);
+        }
 
         /// <summary>
         /// Copies the contents of the buffer in the source map into
-        /// this map, considering source is a trusted source
+        /// this map, considering source is a trusted source.
         /// </summary>
-        /// <param name="source">The source map</param>
+        /// <param name="source">The source map.</param>
         public void CopyFrom(DataMap<T> source)
         {
             AllocateBuffer(source._width, source._height);
 
-            if (_cellsCount > 0)
-                Array.Copy(source._data, 0, _data, 0, _cellsCount);
+            if (CellsCount > 0)
+                Array.Copy(source._data, 0, _data, 0, CellsCount);
 
             // Copy the borderValue as well
-            _borderValue = source._borderValue;
+            BorderValue = source.BorderValue;
         }
-
 
         /// <summary>
         /// Copies up to width * height cells from internal data buffer into the data buffer of the given map
-        /// This method use dest.CopyFrom(DataMap<T> source) where sours is the current object.
+        /// This method use dest.CopyFrom(<see cref="DataMap{T}"/> source) where sours is the current object.
         /// </summary>
-        /// <param name="dest">The destination map</param>
+        /// <param name="dest">The destination map.</param>
         public void CopyTo(DataMap<T> dest)
         {
             if (dest == null)
-                throw new ArgumentNullException("Dest is null");
-            else
-                dest.CopyFrom(this);
+                throw new ArgumentNullException("dest");
+
+            dest.CopyFrom(this);
         }
 
-
         /// <summary>
-        /// Copies up to width * height cells from internal data buffer into the given buffer
+        /// Copies up to width * height cells from internal data buffer into the given buffer.
         /// </summary>
-        /// <param name="buffer">The destination buffer</param>
+        /// <param name="buffer">The destination buffer.</param>
         public void CopyTo(ref T[] buffer)
         {
             if (_data == null)
                 return;
-            else if (buffer == null)
-                buffer = new T[_cellsCount];
+            if (buffer == null)
+                buffer = new T[CellsCount];
 
             int size = (_data.Length > buffer.Length) ? buffer.Length : _data.Length;
             Array.Copy(_data, 0, buffer, 0, size);
         }
 
-
         /// <summary>
-        /// Share the internal buffer
+        /// Share the internal buffer.
         /// </summary>
-        /// <param name="buffer">The internal buffer</param>
         public T[] Share()
         {
             if (_data == null)
@@ -378,10 +383,8 @@ namespace LibNoise.Utils
             return _data;
         }
 
-
         /// <summary>
         /// Resets the map object.
-        ///
         /// This method is similar to the SetSize(0, 0)
         /// </summary>
         public void Reset()
@@ -389,19 +392,16 @@ namespace LibNoise.Utils
             AllocateBuffer(0, 0);
         }
 
-
         /// <summary>
         /// Resets the map object.
-        ///
         /// This method is similar to SetSize(0, 0) or Reset(), except this method
-        /// also deletes the buffer
+        /// also deletes the buffer.
         /// </summary>
         public void DeleteAndReset()
         {
             _data = null;
             AllocateBuffer(0, 0);
         }
-
 
         /// <summary>
         /// Reallocates the map to recover wasted memory.
@@ -413,11 +413,10 @@ namespace LibNoise.Utils
                 // There is wasted memory.  
                 // Create the smallest buffer that can fit the
                 // data and copy the data to it.
-                if (_data.Length > _cellsCount)
-                    Array.Resize(ref _data, _cellsCount);
+                if (_data.Length > CellsCount)
+                    Array.Resize(ref _data, CellsCount);
             }
         }
-
 
         /// <summary>
         /// Clears the map to a specified value.
@@ -428,19 +427,18 @@ namespace LibNoise.Utils
         {
             if (_data != null)
             {
-                for (int i = 0; i <= _cellsCount; i++)
+                for (int i = 0; i <= CellsCount; i++)
                     _data[i] = value;
             }
         }
 
-
         /// <summary>
-        /// Clears the map to a 0 value
+        /// Clears the map to a 0 value.
         /// </summary>
         public void Clear()
         {
             if (_data != null)
-                Array.Clear(_data, 0, _cellsCount);
+                Array.Clear(_data, 0, CellsCount);
         }
 
         #endregion
@@ -449,52 +447,51 @@ namespace LibNoise.Utils
 
         /// <summary>
         /// Return the memory size of the type of data.
-        /// Children must implement this method to calculate the memory usage
+        /// Children must implement this method to calculate the memory usage.
         /// </summary>
-        /// <returns>The memory size of the type of data</returns>
+        /// <returns>The memory size of the type of data.</returns>
         protected abstract int SizeofT();
 
         /// <summary>
-        /// Return the minimum value of the type of data
+        /// Return the minimum value of the type of data.
         /// </summary>
         /// <returns></returns>
         protected abstract T MinvalofT();
 
         /// <summary>
-        /// Return the maximum value of the type of data
+        /// Return the maximum value of the type of data.
         /// </summary>
         /// <returns></returns>
         protected abstract T MaxvalofT();
 
         /// <summary>
-        /// Allocate a buffer
+        /// Allocate a buffer.
         /// </summary>
         protected void AllocateBuffer()
         {
-            _cellsCount = _width*_height;
+            CellsCount = _width*_height;
             _stride = _width;
-            _memoryUsage = _cellsCount*SizeofT();
+            _memoryUsage = CellsCount*SizeofT();
 
-            if (_cellsCount == 0)
+            if (CellsCount == 0)
                 return;
-            else if (_data == null)
-                _data = new T[_cellsCount];
-            else if (_data.Length < _cellsCount)
+
+            if (_data == null)
+                _data = new T[CellsCount];
+            else if (_data.Length < CellsCount)
             {
                 // Buffer is too small
                 // Create the smallest buffer that can fit the
                 // data and copy the data to it.
-                Array.Resize(ref _data, _cellsCount);
+                Array.Resize(ref _data, CellsCount);
             }
         }
 
-
         /// <summary>
-        /// Allocate a buffer, assuming width and height are correct values @see SetSize(int, int)
-        /// 
+        /// Allocate a buffer, assuming width and height are correct values @see SetSize(int, int). 
         /// </summary>
-        /// <param name="width">width The new width</param>
-        /// <param name="height">height The new height</param>
+        /// <param name="width">Width The new width.</param>
+        /// <param name="height">Height The new height.</param>
         protected void AllocateBuffer(int width, int height)
         {
             _width = width;

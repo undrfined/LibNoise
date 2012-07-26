@@ -18,43 +18,40 @@ namespace LibNoise.Renderer
     using LibNoise.Utils;
 
     /// <summary>
-    /// Implements a 8 bits Heightmap, a 2-dimensional array of unsigned byte values (0 to 255)
+    /// Implements a 8 bits Heightmap, a 2-dimensional array of unsigned byte values (0 to 255).
     /// </summary>
     public class Heightmap8 : DataMap<byte>, IMap2D<byte>
     {
         #region Ctor/Dtor
 
         /// <summary>
-        /// 0-args constructor
+        /// 0-args constructor.
         /// </summary>
         public Heightmap8()
         {
-            _borderValue = byte.MinValue;
+            BorderValue = byte.MinValue;
             AllocateBuffer();
         }
 
-
         /// <summary>
         /// Create a new Heightmap8 with the given values
-        /// The width and height values must be positive.
-        /// 
+        /// The width and height values must be positive. 
         /// </summary>
         /// <param name="width">The width of the new noise map.</param>
         /// <param name="height">The height of the new noise map</param>
         public Heightmap8(int width, int height)
         {
-            _borderValue = byte.MinValue;
+            BorderValue = byte.MinValue;
             AllocateBuffer(width, height);
         }
 
-
         /// <summary>
-        /// Copy constructor
+        /// Copy constructor.
         /// </summary>
-        /// <param name="copy">The heightmap to copy</param>
+        /// <param name="copy">The heightmap to copy.</param>
         public Heightmap8(Heightmap8 copy)
         {
-            _borderValue = byte.MinValue;
+            BorderValue = byte.MinValue;
             CopyFrom(copy);
         }
 
@@ -63,27 +60,26 @@ namespace LibNoise.Renderer
         #region Interaction
 
         /// <summary>
-        /// Find the lowest and highest value in the map
+        /// Find the lowest and highest value in the map.
         /// </summary>
-        /// Cannot implement this method in DataMap because 
-        /// T < T or T > T does not compile (Unpredictable type of T)
-        /// <param name="min">the lowest value</param>
-        /// <param name="max">the highest value</param>
+        /// <param name="min">The lowest value.</param>
+        /// <param name="max">The highest value.</param>
         public void MinMax(out byte min, out byte max)
         {
             min = max = 0;
+            byte[] data = Data;
 
-            if (_data != null && _data.Length > 0)
+            if (data != null && data.Length > 0)
             {
                 // First value, min and max for now
-                min = max = _data[0];
+                min = max = data[0];
 
-                for (int i = 0; i < _data.Length; i++)
+                for (int i = 0; i < data.Length; i++)
                 {
-                    if (min > _data[i])
-                        min = _data[i];
-                    else if (max < _data[i])
-                        max = _data[i];
+                    if (min > data[i])
+                        min = data[i];
+                    else if (max < data[i])
+                        max = data[i];
                 }
             }
         }
@@ -93,30 +89,27 @@ namespace LibNoise.Renderer
         #region Internal
 
         /// <summary>
-        /// Return the memory size of a unsigned byte
-        /// 
+        /// Return the memory size of a unsigned byte. 
         /// </summary>
-        /// <returns>The memory size of a unsigned byte</returns>
+        /// <returns>The memory size of a unsigned byte.</returns>
         protected override int SizeofT()
         {
             return 8;
         }
 
-
         /// <summary>
-        /// Return the maximum value of a unsigned byte type (255)
+        /// Return the maximum value of a unsigned byte type (255).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Maximum value.</returns>
         protected override byte MaxvalofT()
         {
             return byte.MaxValue;
         }
 
-
         /// <summary>
-        /// Return the minimum value of a unsigned byte type (0)
+        /// Return the minimum value of a unsigned byte type (0).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Minimum value.</returns>
         protected override byte MinvalofT()
         {
             return byte.MinValue;

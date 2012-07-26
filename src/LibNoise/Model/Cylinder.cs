@@ -39,17 +39,16 @@ namespace LibNoise.Model
         #region Ctor/Dtor
 
         /// <summary>
-        /// Default constructor
+        /// Default constructor.
         /// </summary>
         public Cylinder()
         {
         }
 
-
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
-        /// <param name="module">The noise module that is used to generate the output values</param>
+        /// <param name="module">The noise module that is used to generate the output values.</param>
         public Cylinder(IModule3D module)
             : base(module)
         {
@@ -68,18 +67,16 @@ namespace LibNoise.Model
         /// It is oriented along the y axis.  Its center is located at the
         /// origin.
         /// </summary>
-        /// <param name="angle">The angle around the cylinder's center, in degrees</param>
-        /// <param name="height">The height along the y axis</param>
-        /// <returns>The output value from the noise module</returns>
+        /// <param name="angle">The angle around the cylinder's center, in degrees.</param>
+        /// <param name="height">The height along the y axis.</param>
+        /// <returns>The output value from the noise module.</returns>
         public float GetValue(float angle, float height)
         {
-            float x, y, z;
+            var x = (float) Math.Cos(angle*Libnoise.Deg2Rad);
+            float y = height;
+            var z = (float) Math.Sin(angle*Libnoise.Deg2Rad);
 
-            x = (float) Math.Cos(angle*Libnoise.DEG2RAD);
-            y = height;
-            z = (float) Math.Sin(angle*Libnoise.DEG2RAD);
-
-            return ((IModule3D) _sourceModule).GetValue(x, y, z);
+            return ((IModule3D) PSourceModule).GetValue(x, y, z);
         }
 
         #endregion

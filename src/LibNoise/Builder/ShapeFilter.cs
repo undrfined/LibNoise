@@ -18,7 +18,7 @@ namespace LibNoise.Builder
     using LibNoise.Renderer;
 
     /// <summary>
-    /// 
+    /// Shape filter.
     /// </summary>
     public class ShapeFilter : IBuilderFilter
     {
@@ -30,59 +30,50 @@ namespace LibNoise.Builder
         protected struct LevelCache
         {
             /// <summary>
-            /// 
+            /// Level.
             /// </summary>
-            public byte level;
+            public byte Level;
+
+            private int _x;
+
+            private int _y;
 
             /// <summary>
-            /// 
+            /// Default constructor.
             /// </summary>
-            private int x;
-
-            /// <summary>
-            /// 
-            /// </summary>
-            private int y;
-
-            /// <summary>
-            /// Default constructor
-            /// </summary>
-            /// <param name="x"></param>
-            /// <param name="y"></param>
-            /// <param name="level"></param>
+            /// <param name="x">X.</param>
+            /// <param name="y">Y.</param>
+            /// <param name="level">Level.</param>
             public LevelCache(int x, int y, byte level)
             {
-                this.x = x;
-                this.y = y;
-                this.level = level;
+                _x = x;
+                _y = y;
+                Level = level;
             }
 
 
             /// <summary>
-            /// 
+            /// IsCached.
             /// </summary>
-            /// <param name="x"></param>
-            /// <param name="y"></param>
-            /// <param name="color"></param>
-            /// <returns></returns>
+            /// <param name="x">X.</param>
+            /// <param name="y">Y.</param>
             public bool IsCached(int x, int y)
             {
-                return this.x == x && this.y == y;
+                return _x == x && _y == y;
             }
 
 
             /// <summary>
-            /// 
+            /// Update.
             /// </summary>
-            /// <param name="x"></param>
-            /// <param name="y"></param>
-            /// <param name="level"></param>
-            /// <returns></returns>
+            /// <param name="x">X.</param>
+            /// <param name="y">Y.</param>
+            /// <param name="level">Level.</param>
             public void Update(int x, int y, byte level)
             {
-                this.x = x;
-                this.y = y;
-                this.level = level;
+                _x = x;
+                _y = y;
+                Level = level;
             }
         }
 
@@ -91,9 +82,9 @@ namespace LibNoise.Builder
         #region Constants
 
         /// <summary>
-        /// 
+        /// Default value.
         /// </summary>
-        public const float DEFAULT_VALUE = -0.5f;
+        public const float DefaultValue = -0.5f;
 
         #endregion
 
@@ -102,17 +93,17 @@ namespace LibNoise.Builder
         /// <summary>
         /// 
         /// </summary>
-        protected LevelCache _cache = new LevelCache(-1, -1, 0);
+        protected LevelCache Cache = new LevelCache(-1, -1, 0);
 
         /// <summary>
         /// 
         /// </summary>
-        protected float _constant = DEFAULT_VALUE;
+        protected float Constant = DefaultValue;
 
         /// <summary>
         /// The shape image
         /// </summary>
-        protected IMap2D<IColor> _shape;
+        protected IMap2D<IColor> PShape;
 
         #endregion
 
@@ -123,8 +114,8 @@ namespace LibNoise.Builder
         /// </summary>
         public IMap2D<IColor> Shape
         {
-            get { return _shape; }
-            set { _shape = value; }
+            get { return PShape; }
+            set { PShape = value; }
         }
 
         /// <summary>
@@ -132,8 +123,8 @@ namespace LibNoise.Builder
         /// </summary>
         public float ConstantValue
         {
-            get { return _constant; }
-            set { _constant = value; }
+            get { return Constant; }
+            set { Constant = value; }
         }
 
         #endregion
@@ -156,39 +147,35 @@ namespace LibNoise.Builder
 
             if (level == byte.MinValue)
                 return FilterLevel.Constant;
-            else if (level == byte.MaxValue)
-                return FilterLevel.Source;
-            else
-                return FilterLevel.Filter;
+
+            return level == byte.MaxValue ? FilterLevel.Source : FilterLevel.Filter;
         }
 
 
         /// <summary>
-        /// 
+        /// Filter value.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="source"></param>
-        /// <returns></returns>
+        /// <param name="x">X.</param>
+        /// <param name="y">Y.</param>
+        /// <param name="source">Source.</param>
+        /// <returns>Filtered value.</returns>
         public float FilterValue(int x, int y, float source)
         {
             byte level = GetGreyscaleLevel(x, y);
 
             if (level == byte.MaxValue)
             {
-//|| source > _constant
+                //|| source > _constant
                 return source;
             }
-            else if (level == byte.MinValue)
-                return _constant;
-            else
-            {
-                return Libnoise.Lerp(
-                    _constant,
-                    source,
-                    level/255.0f
-                    );
-            }
+            if (level == byte.MinValue)
+                return Constant;
+
+            return Libnoise.Lerp(
+                Constant,
+                source,
+                level/255.0f
+                );
         }
 
         #endregion
@@ -196,22 +183,22 @@ namespace LibNoise.Builder
         #region Internal
 
         /// <summary>
-        /// 
+        /// Get greyscale level.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
+        /// <param name="x">X.</param>
+        /// <param name="y">Y.</param>
+        /// <returns>Value.</returns>
         protected byte GetGreyscaleLevel(int x, int y)
         {
             // Is this position is stored in cache ?
-            if (!_cache.IsCached(x, y))
+            if (!Cache.IsCached(x, y))
             {
                 // Assuming controlColor is a greyscale value
                 // just test the red channel
-                _cache.Update(x, y, _shape.GetValue(x, y).Red);
+                Cache.Update(x, y, PShape.GetValue(x, y).Red);
             }
 
-            return _cache.level;
+            return Cache.Level;
         }
 
         #endregion

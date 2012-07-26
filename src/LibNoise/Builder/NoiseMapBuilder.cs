@@ -72,87 +72,87 @@ namespace LibNoise.Builder
         /// The callback function that Build() calls each time it fills a
         /// row of the noise map with coherent-noise values.
         /// </summary>
-        protected NoiseMapBuilderCallback _callBack;
+        protected NoiseMapBuilderCallback PCallBack;
 
         /// <summary>
-        /// 
+        /// Filter.
         /// </summary>
-        protected IBuilderFilter _filter;
+        protected IBuilderFilter PFilter;
 
         /// <summary>
-        /// The height of the map
+        /// The height of the map.
         /// </summary>
-        protected int _height = 0;
+        protected int PHeight = 0;
 
         /// <summary>
         /// The destination noise map that will contain the coherent-noise values.
         /// </summary>
-        protected IMap2D<float> _noiseMap;
+        protected IMap2D<float> PNoiseMap;
 
         /// <summary>
-        /// The source input module
+        /// The source input module.
         /// </summary>
-        protected IModule _sourceModule;
+        protected IModule PSourceModule;
 
         /// <summary>
-        /// The width of the map
+        /// The width of the map.
         /// </summary>
-        protected int _width = 0;
+        protected int PWidth = 0;
 
         #endregion
 
         #region Accessors
 
         /// <summary>
-        /// Gets or sets the source module
+        /// Gets or sets the source module.
         /// </summary>
         public IModule SourceModule
         {
-            get { return _sourceModule; }
-            set { _sourceModule = value; }
+            get { return PSourceModule; }
+            set { PSourceModule = value; }
         }
 
         /// <summary>
-        /// Gets or sets the noise map
+        /// Gets or sets the noise map.
         /// </summary>
         public IMap2D<float> NoiseMap
         {
-            get { return _noiseMap; }
-            set { _noiseMap = value; }
+            get { return PNoiseMap; }
+            set { PNoiseMap = value; }
         }
 
         /// <summary>
-        /// Gets or sets the callback function
+        /// Gets or sets the callback function.
         /// </summary>
         public NoiseMapBuilderCallback CallBack
         {
-            get { return _callBack; }
-            set { _callBack = value; }
+            get { return PCallBack; }
+            set { PCallBack = value; }
         }
 
         /// <summary>
-        /// Gets the width of the NoiseMap
+        /// Gets the width of the NoiseMap.
         /// </summary>
         public int Width
         {
-            get { return _width; }
+            get { return PWidth; }
         }
 
         /// <summary>
-        /// Gets the height of the NoiseMap
+        /// Gets the height of the NoiseMap.
         /// </summary>
         public int Height
         {
-            get { return _height; }
+            get { return PHeight; }
         }
 
         /// <summary>
-        /// 
+        /// Filter.
         /// </summary>
         public IBuilderFilter Filter
         {
-            get { return _filter; }
-            set { _filter = value; }
+            get { return PFilter; }
+            set { PFilter = value; }
         }
 
         #endregion
@@ -192,20 +192,18 @@ namespace LibNoise.Builder
         /// 
         /// @pre The width and height values are positive.
         ///
-        /// @throw ArgumentException See the preconditions
+        /// @throw ArgumentException See the preconditions.
         /// 
         /// </summary>
-        /// <param name="width">width The new width for the destination noise map</param>
-        /// <param name="height">height The new height for the destination noise map</param>
+        /// <param name="width">width The new width for the destination noise map.</param>
+        /// <param name="height">height The new height for the destination noise map.</param>
         public void SetSize(int width, int height)
         {
             if (width < 0 || height < 0)
                 throw new ArgumentException("Dimension must be greater or equal 0");
-            else
-            {
-                _height = height;
-                _width = width;
-            }
+            
+            PHeight = height;
+            PWidth = width;
         }
 
         #endregion

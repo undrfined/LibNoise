@@ -15,11 +15,78 @@
 // 
 // From the original Jason Bevins's Libnoise (http://libnoise.sourceforge.net)
 
-
 namespace LibNoise.Renderer
 {
     using System;
     using System.Collections.Generic;
+
+    /// <summary>
+    /// Well-known gradient colors.
+    /// </summary>
+    public static class GradientColors
+    {
+        /// <summary>
+        /// Create a graysacle GradientColor
+        /// </summary>
+        public static GradientColor Grayscale
+        {
+            get
+            {
+                var gradient = new GradientColor();
+                gradient.AddGradientPoint(-1.0f, Colors.Black);
+                gradient.AddGradientPoint(1.0f, Colors.White);
+                return gradient;
+            }
+        }
+
+        /// <summary>
+        /// Create an empty GradientColor
+        /// </summary>
+        public static GradientColor Empty
+        {
+            get
+            {
+                var gradient = new GradientColor();
+                gradient.AddGradientPoint(-1.0f, Colors.Transparent);
+                gradient.AddGradientPoint(1.0f, Colors.Transparent);
+                return gradient;
+            }
+        }
+
+        /// <summary>
+        /// Create an terrain  GradientColor
+        /// </summary>
+        public static GradientColor Terrain
+        {
+            get
+            {
+                var gradient = new GradientColor();
+
+                gradient.AddGradientPoint(-1.0f, new Color(0, 0, 128, 255)); // deeps
+                gradient.AddGradientPoint(-0.25f, new Color(0, 0, 255, 255)); // shallow
+                gradient.AddGradientPoint(0.0f, new Color(0, 128, 255, 255)); // shore
+                gradient.AddGradientPoint(0.0625f, new Color(240, 240, 64, 255)); // sand
+                gradient.AddGradientPoint(0.125f, new Color(32, 160, 0, 255)); // grass
+                gradient.AddGradientPoint(0.375f, new Color(224, 224, 0, 255)); // dirt
+                gradient.AddGradientPoint(0.75f, new Color(128, 128, 128, 255)); // rock
+                gradient.AddGradientPoint(1.0f, new Color(255, 255, 255, 255)); // snow
+
+                /* From noise::utils
+				gradient.AddGradientPoint(-1.00f, Color(0, 0, 128, 255));
+				gradient.AddGradientPoint(-0.20f, Color(32, 64, 128, 255));
+				gradient.AddGradientPoint(-0.04f, Color(64, 96, 192, 255));
+				gradient.AddGradientPoint(-0.02f, Color(192, 192, 128, 255));
+				gradient.AddGradientPoint(0.00f, Color(0, 192, 0, 255));
+				gradient.AddGradientPoint(0.25f, Color(192, 192, 0, 255));
+				gradient.AddGradientPoint(0.50f, Color(160, 96, 64, 255));
+				gradient.AddGradientPoint(0.75f, Color(128, 255, 255, 255));
+				gradient.AddGradientPoint(1.00f, Color(255, 255, 255, 255));
+				*/
+
+                return gradient;
+            }
+        }
+    }
 
     /// <summary>
     /// Defines a color gradient.
@@ -59,73 +126,11 @@ namespace LibNoise.Renderer
         /// <summary>
         /// The gradient points list
         /// </summary>
-        protected List<GradientPoint> _gradientPoints = new List<GradientPoint>(10);
+        private readonly List<GradientPoint> _gradientPoints = new List<GradientPoint>(10);
 
         #endregion
 
         #region Accessors
-
-        /// <summary>
-        /// Create a graysacle GradientColor
-        /// </summary>
-        public static GradientColor GRAYSCALE
-        {
-            get
-            {
-                var gradient = new GradientColor();
-                gradient.AddGradientPoint(-1.0f, Color.BLACK);
-                gradient.AddGradientPoint(1.0f, Color.WHITE);
-                return gradient;
-            }
-        }
-
-        /// <summary>
-        /// Create an empty GradientColor
-        /// </summary>
-        public static GradientColor EMPTY
-        {
-            get
-            {
-                var gradient = new GradientColor();
-                gradient.AddGradientPoint(-1.0f, Color.TRANSPARENT);
-                gradient.AddGradientPoint(1.0f, Color.TRANSPARENT);
-                return gradient;
-            }
-        }
-
-        /// <summary>
-        /// Create an terrain  GradientColor
-        /// </summary>
-        public static GradientColor TERRAIN
-        {
-            get
-            {
-                var gradient = new GradientColor();
-
-                gradient.AddGradientPoint(-1.0f, new Color(0, 0, 128, 255)); // deeps
-                gradient.AddGradientPoint(-0.25f, new Color(0, 0, 255, 255)); // shallow
-                gradient.AddGradientPoint(0.0f, new Color(0, 128, 255, 255)); // shore
-                gradient.AddGradientPoint(0.0625f, new Color(240, 240, 64, 255)); // sand
-                gradient.AddGradientPoint(0.125f, new Color(32, 160, 0, 255)); // grass
-                gradient.AddGradientPoint(0.375f, new Color(224, 224, 0, 255)); // dirt
-                gradient.AddGradientPoint(0.75f, new Color(128, 128, 128, 255)); // rock
-                gradient.AddGradientPoint(1.0f, new Color(255, 255, 255, 255)); // snow
-
-                /* From noise::utils
-				gradient.AddGradientPoint(-1.00f, Color(0, 0, 128, 255));
-				gradient.AddGradientPoint(-0.20f, Color(32, 64, 128, 255));
-				gradient.AddGradientPoint(-0.04f, Color(64, 96, 192, 255));
-				gradient.AddGradientPoint(-0.02f, Color(192, 192, 128, 255));
-				gradient.AddGradientPoint(0.00f, Color(0, 192, 0, 255));
-				gradient.AddGradientPoint(0.25f, Color(192, 192, 0, 255));
-				gradient.AddGradientPoint(0.50f, Color(160, 96, 64, 255));
-				gradient.AddGradientPoint(0.75f, Color(128, 255, 255, 255));
-				gradient.AddGradientPoint(1.00f, Color(255, 255, 255, 255));
-				*/
-
-                return gradient;
-            }
-        }
 
         #endregion
 
@@ -138,7 +143,6 @@ namespace LibNoise.Renderer
         {
         }
 
-
         /// <summary>
         /// Create a new GradientColor with one color
         /// </summary>
@@ -148,7 +152,6 @@ namespace LibNoise.Renderer
             AddGradientPoint(-1.0f, color);
             AddGradientPoint(1.0f, color);
         }
-
 
         /// <summary>
         /// Create a new GradientColor betwwen start and end
@@ -182,7 +185,6 @@ namespace LibNoise.Renderer
             AddGradientPoint(new GradientPoint(position, color));
         }
 
-
         /// <summary>
         /// Adds a gradient point to this gradient object.
         ///
@@ -202,23 +204,18 @@ namespace LibNoise.Renderer
                         "Cannont insert GradientPoint({0}, {1}) : Each GradientPoint is required to contain a unique position",
                         point.Position, point.Color));
             }
-            else
+            _gradientPoints.Add(point);
+
+            // Desc order
+            _gradientPoints.Sort(delegate(GradientPoint p1, GradientPoint p2)
             {
-                _gradientPoints.Add(point);
-
-                // Desc order
-                _gradientPoints.Sort(delegate(GradientPoint p1, GradientPoint p2)
-                {
-                    if (p1.Position > p2.Position)
-                        return 1;
-                    else if (p1.Position < p2.Position)
-                        return -1;
-                    else
-                        return 0;
-                });
-            }
+                if (p1.Position > p2.Position)
+                    return 1;
+                if (p1.Position < p2.Position)
+                    return -1;
+                return 0;
+            });
         }
-
 
         /// <summary>
         /// Deletes all the gradient points from this gradient object.
@@ -228,7 +225,6 @@ namespace LibNoise.Renderer
         {
             _gradientPoints.Clear();
         }
-
 
         /// <summary>
         /// Returns the color at the specified position in the color gradient.
@@ -271,7 +267,6 @@ namespace LibNoise.Renderer
             return Color.Lerp(_gradientPoints[index0].Color, _gradientPoints[index1].Color, alpha);
         }
 
-
         /// <summary>
         /// Return the size of the GradientPoint list
         /// </summary>
@@ -281,19 +276,14 @@ namespace LibNoise.Renderer
             return _gradientPoints.Count;
         }
 
-
         /// <summary>
-        /// Returns a read-only IList<GradientPoint> wrapper for the current GradientPoint list.
+        /// Returns a read-only <see cref="IList{GradientPoint}"/> wrapper for the current GradientPoint list.
         /// </summary>
-        /// <returns>The read only list</returns>
-        public IList<GradientPoint> getGradientPoints()
+        /// <returns>The read only list.</returns>
+        public IList<GradientPoint> GetGradientPoints()
         {
             return _gradientPoints.AsReadOnly();
         }
-
-        #endregion
-
-        #region Internal
 
         #endregion
     }

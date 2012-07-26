@@ -28,21 +28,21 @@ namespace LibNoise.Model
         #region Fields
 
         /// <summary>
-        /// The source input module
+        /// The source input module.
         /// </summary>
-        protected IModule _sourceModule;
+        protected IModule PSourceModule;
 
         #endregion
 
         #region Accessors
 
         /// <summary>
-        /// Gets or sets the source module
+        /// Gets or sets the source module.
         /// </summary>
         public IModule SourceModule
         {
-            get { return _sourceModule; }
-            set { _sourceModule = value; }
+            get { return PSourceModule; }
+            set { PSourceModule = value; }
         }
 
         #endregion
@@ -63,7 +63,7 @@ namespace LibNoise.Model
         /// <param name="module">The noise module that is used to generate the output values</param>
         public AbstractModel(IModule module)
         {
-            _sourceModule = module;
+            PSourceModule = module;
         }
 
         #endregion

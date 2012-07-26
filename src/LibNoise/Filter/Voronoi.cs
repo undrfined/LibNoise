@@ -15,7 +15,6 @@
 // 
 // From the original Jason Bevins's Libnoise (http://libnoise.sourceforge.net)
 
-
 namespace LibNoise.Filter
 {
     using System;
@@ -61,11 +60,19 @@ namespace LibNoise.Filter
         /// <summary>
         /// Default persistence value for the Voronoi noise module.
         /// </summary>
-        public const float DEFAULT_DISPLACEMENT = 1.0f;
+        public const float DefaultDisplacement = 1.0f;
 
         #endregion
 
         #region Fields
+
+        private float _displacement = DefaultDisplacement;
+
+        private bool _distance;
+
+        #endregion
+
+        #region Accessors
 
         /// <summary>
         /// This noise module assigns each Voronoi cell with a random constant
@@ -73,31 +80,16 @@ namespace LibNoise.Filter
         /// value</i> controls the range of random values to assign to each
         /// cell.  The range of random values is +/- the displacement value.
         /// </summary>
-        protected float _displacement = DEFAULT_DISPLACEMENT;
-
-        /// <summary>
-        /// Applying the distance from the nearest seed point to the output
-        /// value causes the points in the Voronoi cells to increase in value
-        /// the further away that point is from the nearest seed point.
-        /// </summary>
-        protected bool _distance = false;
-
-        #endregion
-
-        #region Accessors
-
-        /// <summary>
-        /// Gets or sets the displacement
-        /// </summary>
         public float Displacement
         {
             get { return _displacement; }
             set { _displacement = value; }
         }
 
-
         /// <summary>
-        /// 
+        /// Applying the distance from the nearest seed point to the output
+        /// value causes the points in the Voronoi cells to increase in value
+        /// the further away that point is from the nearest seed point.
         /// </summary>
         public bool Distance
         {
@@ -178,7 +170,7 @@ namespace LibNoise.Filter
                 float yDist = yCandidate - y;
                 float zDist = zCandidate - z;
                 value = ((float) Math.Sqrt(xDist*xDist + yDist*yDist + zDist*zDist)
-                    )*Libnoise.SQRT_3 - 1.0f;
+                    )*Libnoise.Sqrt3 - 1.0f;
             }
             else
                 value = 0.0f;

@@ -127,10 +127,10 @@ namespace LibNoise.Builder
         ///
         /// @throw ArgumentException See the preconditions.
         /// </summary>
-        /// <param name="lowerXBound">The lower Angle boundary of the noise map, in units.</param>
-        /// <param name="upperXBound">The upper Angle boundary of the noise map, in units.</param>
-        /// <param name="lowerZBound">The lower Height boundary of the noise map, in units.</param>
-        /// <param name="upperZBound">The upper Height boundary of the noise map, in units.</param>
+        /// <param name="lowerAngleBound">The lower Angle boundary of the noise map, in units.</param>
+        /// <param name="upperAngleBound">The upper Angle boundary of the noise map, in units.</param>
+        /// <param name="lowerHeightBound">The lower Height boundary of the noise map, in units.</param>
+        /// <param name="upperHeightBound">The upper Height boundary of the noise map, in units.</param>
         public void SetBounds(float lowerAngleBound, float upperAngleBound, float lowerHeightBound,
             float upperHeightBound)
         {
@@ -175,63 +175,63 @@ namespace LibNoise.Builder
                     "Incoherent bounds : lowerAngleBound >= upperAngleBound or lowerZBound >= upperHeightBound");
             }
 
-            if (_width < 0 || _height < 0)
+            if (PWidth < 0 || PHeight < 0)
                 throw new ArgumentException("Dimension must be greater or equal 0");
 
-            if (_sourceModule == null)
+            if (PSourceModule == null)
                 throw new ArgumentException("A source module must be provided");
 
-            if (_noiseMap == null)
+            if (PNoiseMap == null)
                 throw new ArgumentException("A noise map must be provided");
 
             // Resize the destination noise map so that it can store the new output
             // values from the source model.
-            _noiseMap.SetSize(_width, _height);
+            PNoiseMap.SetSize(PWidth, PHeight);
 
             // Create the plane model.
-            var model = new Cylinder((IModule3D) _sourceModule);
+            var model = new Cylinder((IModule3D) PSourceModule);
 
             float angleExtent = _upperAngleBound - _lowerAngleBound;
             float heightExtent = _upperHeightBound - _lowerHeightBound;
 
-            float xDelta = angleExtent/_width;
-            float yDelta = heightExtent/_height;
+            float xDelta = angleExtent/PWidth;
+            float yDelta = heightExtent/PHeight;
 
             float curAngle = _lowerAngleBound;
             float curHeight = _lowerHeightBound;
 
             // Fill every point in the noise map with the output values from the model.
-            for (int y = 0; y < _height; y++)
+            for (int y = 0; y < PHeight; y++)
             {
                 curAngle = _lowerAngleBound;
 
-                for (int x = 0; x < _width; x++)
+                for (int x = 0; x < PWidth; x++)
                 {
                     float finalValue;
                     var level = FilterLevel.Source;
 
-                    if (_filter != null)
-                        level = _filter.IsFiltered(x, y);
+                    if (PFilter != null)
+                        level = PFilter.IsFiltered(x, y);
 
-                    if (level == FilterLevel.Constant)
-                        finalValue = _filter.ConstantValue;
+                    if (level == FilterLevel.Constant && PFilter != null)
+                        finalValue = PFilter.ConstantValue;
                     else
                     {
                         finalValue = model.GetValue(curAngle, curHeight);
 
-                        if (level == FilterLevel.Filter)
-                            finalValue = _filter.FilterValue(x, y, finalValue);
+                        if (level == FilterLevel.Filter && PFilter != null)
+                            finalValue = PFilter.FilterValue(x, y, finalValue);
                     }
 
-                    _noiseMap.SetValue(x, y, finalValue);
+                    PNoiseMap.SetValue(x, y, finalValue);
 
                     curAngle += xDelta;
                 }
 
                 curHeight += yDelta;
 
-                if (_callBack != null)
-                    _callBack(y);
+                if (PCallBack != null)
+                    PCallBack(y);
             }
         }
 

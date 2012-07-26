@@ -33,12 +33,12 @@ namespace LibNoise.Renderer
         /// <summary>
         /// The maximum width of a raster.
         /// </summary>
-        public const int RASTER_MAX_WIDTH = 32767;
+        public const int RasterMaxWidth = 32767;
 
         /// <summary>
         /// The maximum height of a raster.
         /// </summary>
-        public const int RASTER_MAX_HEIGHT = 32767;
+        public const int RasterMaxHeight = 32767;
 
         #endregion
 
@@ -49,14 +49,13 @@ namespace LibNoise.Renderer
         /// </summary>
         public Image()
         {
-            _hasMaxDimension = true;
-            _maxHeight = RASTER_MAX_HEIGHT;
-            _maxWidth = RASTER_MAX_WIDTH;
+            HasMaxDimension = true;
+            MaxHeight = RasterMaxHeight;
+            MaxWidth = RasterMaxWidth;
 
-            _borderValue = Color.TRANSPARENT;
+            BorderValue = Colors.Transparent;
             AllocateBuffer();
         }
-
 
         /// <summary>
         /// Create a new Image with the given values
@@ -77,14 +76,13 @@ namespace LibNoise.Renderer
         /// <param name="height">The height of the new noise map</param>
         public Image(int width, int height)
         {
-            _hasMaxDimension = true;
-            _maxHeight = RASTER_MAX_HEIGHT;
-            _maxWidth = RASTER_MAX_WIDTH;
+            HasMaxDimension = true;
+            MaxHeight = RasterMaxHeight;
+            MaxWidth = RasterMaxWidth;
 
-            _borderValue = Color.WHITE;
+            BorderValue = Colors.White;
             AllocateBuffer(width, height);
         }
-
 
         /// <summary>
         /// Copy constructor
@@ -93,11 +91,11 @@ namespace LibNoise.Renderer
         /// <param name="copy">The image to copy</param>
         public Image(Image copy)
         {
-            _hasMaxDimension = true;
-            _maxHeight = RASTER_MAX_HEIGHT;
-            _maxWidth = RASTER_MAX_WIDTH;
+            HasMaxDimension = true;
+            MaxHeight = RasterMaxHeight;
+            MaxWidth = RasterMaxWidth;
 
-            _borderValue = Color.WHITE;
+            BorderValue = Colors.White;
             CopyFrom(copy);
         }
 
@@ -108,25 +106,23 @@ namespace LibNoise.Renderer
         /// <summary>
         /// Find the lowest and highest value in the map
         /// </summary>
-        /// Cannot implement this method in DataMap because 
-        /// T < T or T > T does not compile (Unpredictable type of T)
         /// <param name="min">the lowest value</param>
         /// <param name="max">the highest value</param>
         public void MinMax(out Color min, out Color max)
         {
             min = max = MinvalofT();
-
-            if (_data != null && _data.Length > 0)
+            Color[] data = Data;
+            if (data != null && data.Length > 0)
             {
                 // First value, min and max for now
-                min = max = _data[0];
+                min = max = data[0];
 
-                for (int i = 0; i < _data.Length; i++)
+                for (int i = 0; i < data.Length; i++)
                 {
-                    if (min > _data[i])
-                        min = _data[i];
-                    else if (max < _data[i])
-                        max = _data[i];
+                    if (min > data[i])
+                        min = data[i];
+                    else if (max < data[i])
+                        max = data[i];
                 }
             }
         }
@@ -145,16 +141,14 @@ namespace LibNoise.Renderer
             return 64; // 4* byte(8) + 1 int(32)
         }
 
-
         /// <summary>
         /// Return the maximum value of a Color type (Solid white)
         /// </summary>
         /// <returns></returns>
         protected override Color MaxvalofT()
         {
-            return Color.WHITE;
+            return Colors.White;
         }
-
 
         /// <summary>
         /// Return the minimum value of a Color type (Solid black)
@@ -162,7 +156,7 @@ namespace LibNoise.Renderer
         /// <returns></returns>
         protected override Color MinvalofT()
         {
-            return Color.BLACK;
+            return Colors.Black;
         }
 
         #endregion

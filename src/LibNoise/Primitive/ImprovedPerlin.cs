@@ -42,7 +42,7 @@ namespace LibNoise.Primitive
         /// <summary>
         /// 
         /// </summary>
-        protected const int RANDOM_SIZE = 256;
+        private const int RandomSize = 256;
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace LibNoise.Primitive
         /// <summary>
         /// Initial permutation table
         /// </summary>
-        protected static int[] _source = {
+        private static readonly int[] Source = {
             151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142,
             8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203,
             117, 35, 11, 32, 57, 177, 33, 88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168, 68, 175, 74, 165,
@@ -69,7 +69,7 @@ namespace LibNoise.Primitive
         /// <summary>
         /// Stores the random values used to generate the noise
         /// </summary>
-        protected int[] _random;
+        private int[] _random;
 
         #endregion
 
@@ -80,15 +80,21 @@ namespace LibNoise.Primitive
         /// </summary>
         public override int Seed
         {
-            get { return _seed; }
+            get { return base.Seed; }
             set
             {
-                if (_seed != value)
+                if (base.Seed != value)
                 {
-                    _seed = value;
-                    Randomize(_seed);
+                    base.Seed = value;
+                    Randomize(base.Seed);
                 }
             }
+        }
+
+        protected int[] Random
+        {
+            get { return _random; }
+            set { _random = value; }
         }
 
         #endregion
@@ -99,22 +105,18 @@ namespace LibNoise.Primitive
         /// 0-args constructor
         /// </summary>
         public ImprovedPerlin()
-            : this(DEFAULT_SEED, DEFAULT_QUALITY)
+            : this(DefaultSeed, DefaultQuality)
         {
         }
-
 
         /// <summary>
         /// Create a new ImprovedPerlin with given values
         /// </summary>
         /// <param name="seed"></param>
         /// <param name="quality"></param>
-        public ImprovedPerlin(int seed, NoiseQuality quality)
+        public ImprovedPerlin(int seed, NoiseQuality quality) : base(seed, quality)
         {
-            _seed = seed;
-            _quality = quality;
-
-            Randomize(_seed);
+            Randomize(Seed);
         }
 
         #endregion
@@ -126,9 +128,9 @@ namespace LibNoise.Primitive
         /// 
         /// </summary>
         /// <param name="seed">The seed used to generate the random values</param>
-        protected void Randomize(int seed)
+        private void Randomize(int seed)
         {
-            _random = new int[RANDOM_SIZE*2];
+            _random = new int[RandomSize*2];
 
             if (seed != 0)
             {
@@ -138,7 +140,7 @@ namespace LibNoise.Primitive
                 var F = new byte[4];
                 Libnoise.UnpackLittleUint32(seed, ref F);
 
-                for (int i = 0; i < _source.Length; i++)
+                for (int i = 0; i < Source.Length; i++)
                 {
                     /*
 					_random[i] =  (F[0] > 0) ? _source[i] ^ F[0] : _source[i];
@@ -147,24 +149,24 @@ namespace LibNoise.Primitive
 					_random[i] =  (F[3] > 0) ? _source[i] ^ F[3] : _random[i];
 					*/
 
-                    _random[i] = _source[i] ^ F[0];
+                    _random[i] = Source[i] ^ F[0];
                     _random[i] ^= F[1];
                     _random[i] ^= F[2];
                     _random[i] ^= F[3];
 
-                    _random[i + RANDOM_SIZE] = _random[i];
+                    _random[i + RandomSize] = _random[i];
                 }
 
 #if NOISE_RANDOM_PARANOIA
 #warning NOISE_RANDOM_PARANOIA is on
 
-                // Test if _random has unique values, a sorted _random array
+                // Test if Random has unique values, a sorted Random array
                 // must have values from 0 to 255 
-                var __sorted = new int[RANDOM_SIZE];
-                Array.Copy(_random, __sorted, RANDOM_SIZE);
+                var __sorted = new int[RandomSize];
+                Array.Copy(Random, __sorted, RandomSize);
                 Array.Sort(__sorted);
 
-                for (int _j = 0; _j < RANDOM_SIZE; _j++)
+                for (int _j = 0; _j < RandomSize; _j++)
                 {
                     if (_j != __sorted[_j])
                         throw new Exception("Unconsistent random value at " + _j + " : " + __sorted[_j]);
@@ -173,8 +175,8 @@ namespace LibNoise.Primitive
             }
             else
             {
-                for (int i = 0; i < RANDOM_SIZE; i++)
-                    _random[i + RANDOM_SIZE] = _random[i] = _source[i];
+                for (int i = 0; i < RandomSize; i++)
+                    _random[i + RandomSize] = _random[i] = Source[i];
             }
         }
 
@@ -201,7 +203,7 @@ namespace LibNoise.Primitive
             // Smooth the curve
             float u = 0.0f;
 
-            switch (_quality)
+            switch (Quality)
             {
                 case NoiseQuality.Fast:
                     u = x;
@@ -246,7 +248,7 @@ namespace LibNoise.Primitive
             // Smooth the curve
             float u = 0.0f, v = 0.0f;
 
-            switch (_quality)
+            switch (Quality)
             {
                 case NoiseQuality.Fast:
                     u = x;
@@ -316,7 +318,7 @@ namespace LibNoise.Primitive
             // Smooth the curve
             float u = 0.0f, v = 0.0f, w = 0.0f;
 
-            switch (_quality)
+            switch (Quality)
             {
                 case NoiseQuality.Fast:
                     u = x;
@@ -339,38 +341,38 @@ namespace LibNoise.Primitive
 
             // Hash coordinates of the 8 cubes corners
             // Fetch some randoms values from the table
-            int A = _random[X] + Y;
-            int AA = _random[A] + Z;
-            int AB = _random[A + 1] + Z;
-            int B = _random[X + 1] + Y;
-            int BA = _random[B] + Z;
-            int BB = _random[B + 1] + Z;
+            int a = _random[X] + Y;
+            int aa = _random[a] + Z;
+            int ab = _random[a + 1] + Z;
+            int b = _random[X + 1] + Y;
+            int ba = _random[b] + Z;
+            int bb = _random[b + 1] + Z;
 
             // Interpolate between directions
             return
                 Libnoise.Lerp(
                     Libnoise.Lerp(
                         Libnoise.Lerp(
-                            Grad(_random[AA], x, y, z),
-                            Grad(_random[BA], x - 1, y, z),
+                            Grad(_random[aa], x, y, z),
+                            Grad(_random[ba], x - 1, y, z),
                             u
                             ),
                         Libnoise.Lerp(
-                            Grad(_random[AB], x, y - 1, z),
-                            Grad(_random[BB], x - 1, y - 1, z),
+                            Grad(_random[ab], x, y - 1, z),
+                            Grad(_random[bb], x - 1, y - 1, z),
                             u
                             ),
                         v
                         ),
                     Libnoise.Lerp(
                         Libnoise.Lerp(
-                            Grad(_random[AA + 1], x, y, z - 1),
-                            Grad(_random[BA + 1], x - 1, y, z - 1),
+                            Grad(_random[aa + 1], x, y, z - 1),
+                            Grad(_random[ba + 1], x - 1, y, z - 1),
                             u
                             ),
                         Libnoise.Lerp(
-                            Grad(_random[AB + 1], x, y - 1, z - 1),
-                            Grad(_random[BB + 1], x - 1, y - 1, z - 1),
+                            Grad(_random[ab + 1], x, y - 1, z - 1),
+                            Grad(_random[bb + 1], x - 1, y - 1, z - 1),
                             u
                             ),
                         v
@@ -389,7 +391,7 @@ namespace LibNoise.Primitive
         /// <param name="y">The amount of the bias on the Y axis</param>
         /// <param name="z">The amount of the bias on the Z axis</param>
         /// <returns>The directional bias strength</returns>
-        protected float Grad(int hash, float x, float y, float z)
+        private float Grad(int hash, float x, float y, float z)
         {
             /*
 			 * TODO Do this test to improve the method
@@ -488,7 +490,6 @@ namespace LibNoise.Primitive
             return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
         }
 
-
         /// <summary>
         /// Modifies the result by adding a directional bias
         /// </summary>
@@ -496,7 +497,7 @@ namespace LibNoise.Primitive
         /// <param name="x">The amount of the bias on the X axis</param>
         /// <param name="y">The amount of the bias on the Y axis</param>
         /// <returns>The directional bias strength</returns>
-        protected float Grad(int hash, float x, float y)
+        private float Grad(int hash, float x, float y)
         {
             // Fetch the last 3 bits
             int h = hash & 3;
@@ -529,14 +530,13 @@ namespace LibNoise.Primitive
             return u + v;
         }
 
-
         /// <summary>
         /// Modifies the result by adding a directional bias
         /// </summary>
         /// <param name="hash">The random value telling in which direction the bias will occur</param>
         /// <param name="x">The amount of the bias on the X axis</param>
         /// <returns>The directional bias strength</returns>
-        protected float Grad(int hash, float x)
+        private float Grad(int hash, float x)
         {
             // Result table
             // ---+------+----

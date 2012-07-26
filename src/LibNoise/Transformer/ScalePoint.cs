@@ -15,7 +15,7 @@
 // 
 // From the original Jason Bevins's Libnoise (http://libnoise.sourceforge.net)
 
-namespace LibNoise.Tranformer
+namespace LibNoise.Transformer
 {
     /// <summary>
     /// Noise module that scales the coordinates of the input value before

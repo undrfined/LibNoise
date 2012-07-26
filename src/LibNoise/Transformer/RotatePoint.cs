@@ -15,7 +15,7 @@
 // 
 // From the original Jason Bevins's Libnoise (http://libnoise.sourceforge.net)
 
-namespace LibNoise.Tranformer
+namespace LibNoise.Transformer
 {
     using System;
 
@@ -41,17 +41,17 @@ namespace LibNoise.Tranformer
         /// <summary>
         /// Default x rotation angle for the RotatePoint noise module.
         /// </summary>
-        public const float DEFAULT_ROTATE_X = 0.0f;
+        public const float DefaultRotateX = 0.0f;
 
         /// <summary>
         /// Default y rotation angle for the RotatePoint noise module.
         /// </summary>
-        public const float DEFAULT_ROTATE_Y = 0.0f;
+        public const float DefaultRotateY = 0.0f;
 
         /// <summary>
         /// Default z rotation angle for the RotatePoint noise module.
         /// </summary>
-        public const float DEFAULT_ROTATE_Z = 0.0f;
+        public const float DefaultRotateZ = 0.0f;
 
         #endregion
 
@@ -60,76 +60,76 @@ namespace LibNoise.Tranformer
         /// <summary>
         /// The source input module
         /// </summary>
-        protected IModule _sourceModule;
+        private IModule _sourceModule;
 
         /// <summary>
         /// An entry within the 3x3 rotation matrix used for rotating the
         /// input value.
         /// </summary>
-        protected float _x1Matrix;
+        private float _x1Matrix;
 
         /// <summary>
         /// An entry within the 3x3 rotation matrix used for rotating the
         /// input value.
         /// </summary>
-        protected float _x2Matrix;
+        private float _x2Matrix;
 
         /// <summary>
         /// An entry within the 3x3 rotation matrix used for rotating the
         /// input value.
         /// </summary>
-        protected float _x3Matrix;
+        private float _x3Matrix;
 
         /// <summary>
         /// x rotation angle applied to the input value, in degrees.
         /// </summary>
-        protected float _xAngle;
+        private float _xAngle;
 
         /// <summary>
         /// An entry within the 3x3 rotation matrix used for rotating the
         /// input value.
         /// </summary>
-        protected float _y1Matrix;
+        private float _y1Matrix;
 
         /// <summary>
         /// An entry within the 3x3 rotation matrix used for rotating the
         /// input value.
         /// </summary>
-        protected float _y2Matrix;
+        private float _y2Matrix;
 
         /// <summary>
         /// An entry within the 3x3 rotation matrix used for rotating the
         /// input value.
         /// </summary>
-        protected float _y3Matrix;
+        private float _y3Matrix;
 
         /// <summary>
         /// y rotation angle applied to the input value, in degrees.
         /// </summary>
-        protected float _yAngle;
+        private float _yAngle;
 
         /// <summary>
         /// An entry within the 3x3 rotation matrix used for rotating the
         /// input value.
         /// </summary>
-        protected float _z1Matrix;
+        private float _z1Matrix;
 
         /// <summary>
         /// An entry within the 3x3 rotation matrix used for rotating the
         /// input value.
         /// </summary>
-        protected float _z2Matrix;
+        private float _z2Matrix;
 
         /// <summary>
         /// An entry within the 3x3 rotation matrix used for rotating the
         /// input value.
         /// </summary>
-        protected float _z3Matrix;
+        private float _z3Matrix;
 
         /// <summary>
         /// z rotation angle applied to the input value, in degrees.
         /// </summary>
-        protected float _zAngle;
+        private float _zAngle;
 
         #endregion
 
@@ -182,7 +182,6 @@ namespace LibNoise.Tranformer
         {
         }
 
-
         /// <summary>
         /// Create a new noise module with given values
         /// </summary>
@@ -191,7 +190,6 @@ namespace LibNoise.Tranformer
         {
             _sourceModule = source;
         }
-
 
         /// <summary>
         /// Create a new noise module with the given values
@@ -221,12 +219,12 @@ namespace LibNoise.Tranformer
         {
             float xCos, yCos, zCos, xSin, ySin, zSin;
 
-            xCos = (float) Math.Cos(xAngle*Libnoise.DEG2RAD);
-            yCos = (float) Math.Cos(yAngle*Libnoise.DEG2RAD);
-            zCos = (float) Math.Cos(zAngle*Libnoise.DEG2RAD);
-            xSin = (float) Math.Sin(xAngle*Libnoise.DEG2RAD);
-            ySin = (float) Math.Sin(yAngle*Libnoise.DEG2RAD);
-            zSin = (float) Math.Sin(zAngle*Libnoise.DEG2RAD);
+            xCos = (float) Math.Cos(xAngle*Libnoise.Deg2Rad);
+            yCos = (float) Math.Cos(yAngle*Libnoise.Deg2Rad);
+            zCos = (float) Math.Cos(zAngle*Libnoise.Deg2Rad);
+            xSin = (float) Math.Sin(xAngle*Libnoise.Deg2Rad);
+            ySin = (float) Math.Sin(yAngle*Libnoise.Deg2Rad);
+            zSin = (float) Math.Sin(zAngle*Libnoise.Deg2Rad);
 
             _x1Matrix = ySin*xSin*zSin + yCos*zCos;
             _y1Matrix = xCos*zSin;

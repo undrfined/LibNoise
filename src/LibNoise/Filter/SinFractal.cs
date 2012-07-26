@@ -46,8 +46,6 @@ namespace LibNoise.Filter
         /// <returns>The resulting output value.</returns>
         public float GetValue(float x, float y)
         {
-            float signal;
-            float value;
             float ox = x;
             int curOctave;
 
@@ -55,14 +53,14 @@ namespace LibNoise.Filter
             y *= _frequency;
 
             // Initialize value, fBM starts with 0
-            value = 0;
+            float value = 0;
 
             // Inner loop of spectral construction, where the fractal is built
 
             for (curOctave = 0; curOctave < _octaveCount; curOctave++)
             {
                 // Get the coherent-noise value.
-                signal = _source2D.GetValue(x, y)*_spectralWeights[curOctave];
+                float signal = _source2D.GetValue(x, y)*_spectralWeights[curOctave];
 
                 if (signal < 0.0)
                     signal = -signal;
@@ -96,8 +94,6 @@ namespace LibNoise.Filter
         /// <returns>The resulting output value.</returns>
         public float GetValue(float x, float y, float z)
         {
-            float signal;
-            float value;
             int curOctave;
             float ox = x;
 
@@ -106,13 +102,13 @@ namespace LibNoise.Filter
             z *= _frequency;
 
             // Initialize value, fBM starts with 0
-            value = 0;
+            float value = 0;
 
             // Inner loop of spectral construction, where the fractal is built
             for (curOctave = 0; curOctave < _octaveCount; curOctave++)
             {
                 // Get the coherent-noise value.
-                signal = _source3D.GetValue(x, y, z)*_spectralWeights[curOctave];
+                float signal = _source3D.GetValue(x, y, z)*_spectralWeights[curOctave];
 
                 if (signal < 0.0)
                     signal = -signal;

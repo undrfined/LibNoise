@@ -15,7 +15,6 @@
 // 
 // From the original Jason Bevins's Libnoise (http://libnoise.sourceforge.net)
 
-
 namespace LibNoise.Renderer
 {
     using System;
@@ -37,98 +36,50 @@ namespace LibNoise.Renderer
         #region Delegates
 
         /// <summary>
-        /// Compute a grayscale value from the source color
+        /// Compute a grayscale value from the source color.
         /// </summary>
-        /// <param name="color">The source color</param>
-        /// <returns>The computed channel value</returns>
+        /// <param name="color">The source color.</param>
+        /// <returns>The computed channel value.</returns>
         public delegate byte GrayscaleStrategy(IColor color);
 
         #endregion
 
         /// <summary>
-        /// Static Random generator
+        /// Static Random generator.
         /// </summary>
-        private static readonly Random _rnd = new Random(666);
-
-        /// <summary>
-        /// Value of the alpha (transparency) channel.
-        /// </summary>
-        protected byte _alpha = 255;
-
-        /// <summary>
-        /// Value of the blue channel
-        /// </summary>
-        protected byte _blue = 0;
-
-        /// <summary>
-        /// Value of the green channel
-        /// </summary>
-        protected byte _green = 0;
+        private static readonly Random Rnd = new Random(666);
 
         /// <summary>
         /// Internal hashcode
         /// </summary>
-        protected int _hashcode;
+        private readonly int _hashcode;
 
         /// <summary>
-        /// Value of the red channel
+        /// Value of the alpha (transparency) channel.
         /// </summary>
-        protected byte _red = 0;
+        private byte _alpha = 255;
+
+        /// <summary>
+        /// Value of the blue channel.
+        /// </summary>
+        private byte _blue;
+
+        /// <summary>
+        /// Value of the green channel.
+        /// </summary>
+        private byte _green;
+
+        /// <summary>
+        /// Value of the red channel.
+        /// </summary>
+        private byte _red;
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Create a black color
-        /// </summary>
-        public static Color BLACK
-        {
-            get { return new Color(0, 0, 0, 255); }
-        }
-
-        /// <summary>
-        /// Create a white color
-        /// </summary>
-        public static Color WHITE
-        {
-            get { return new Color(255, 255, 255, 255); }
-        }
-
-        /// <summary>
-        /// Create a solid red color
-        /// </summary>
-        public static Color RED
-        {
-            get { return new Color(255, 0, 0, 255); }
-        }
-
-        /// <summary>
-        /// Create a solid green color
-        /// </summary>
-        public static Color GREEN
-        {
-            get { return new Color(0, 255, 0, 255); }
-        }
-
-        /// <summary>
-        /// Create a solid blue color
-        /// </summary>
-        public static Color BLUE
-        {
-            get { return new Color(0, 0, 255, 255); }
-        }
-
-        /// <summary>
-        /// Create a transparent color
-        /// </summary>
-        public static Color TRANSPARENT
-        {
-            get { return new Color(0, 0, 0, 0); }
-        }
-
-        /// <summary>
-        /// The red channel
+        /// The red channel.
         /// </summary>
         public byte Red
         {
@@ -137,7 +88,7 @@ namespace LibNoise.Renderer
         }
 
         /// <summary>
-        /// The green channel
+        /// The green channel.
         /// </summary>
         public byte Green
         {
@@ -146,7 +97,7 @@ namespace LibNoise.Renderer
         }
 
         /// <summary>
-        /// The blue channel
+        /// The blue channel.
         /// </summary>
         public byte Blue
         {
@@ -155,7 +106,7 @@ namespace LibNoise.Renderer
         }
 
         /// <summary>
-        /// The alpha channel
+        /// The alpha channel.
         /// </summary>
         public byte Alpha
         {
@@ -168,21 +119,20 @@ namespace LibNoise.Renderer
         #region Ctor/Dtor
 
         /// <summary>
-        /// 0-args constructor, a solid black color (0, 0, 0, 255)
+        /// 0-args constructor, a solid black color (0, 0, 0, 255).
         /// </summary>
         public Color()
         {
-            _hashcode = (_red + _green + _blue) ^ _rnd.Next();
+            _hashcode = (_red + _green + _blue) ^ Rnd.Next();
         }
 
-
         /// <summary>
-        /// Create a new Color
+        /// Create a new Color.
         /// </summary>
-        /// <param name="r">Value of the red channel</param>
-        /// <param name="g">Value of the green channel</param>
-        /// <param name="b">Value of the blue channel</param>
-        /// <param name="a">Value of the alpha channel</param>
+        /// <param name="r">Value of the red channel.</param>
+        /// <param name="g">Value of the green channel.</param>
+        /// <param name="b">Value of the blue channel.</param>
+        /// <param name="a">Value of the alpha channel.</param>
         public Color(byte r, byte g, byte b, byte a)
             : this()
         {
@@ -192,13 +142,12 @@ namespace LibNoise.Renderer
             _alpha = a;
         }
 
-
         /// <summary>
-        /// Create a new Color
+        /// Create a new Color.
         /// </summary>
-        /// <param name="r">Value of the red channel</param>
-        /// <param name="g">Value of the green channel</param>
-        /// <param name="b">Value of the blue channel</param>
+        /// <param name="r">Value of the red channel.</param>
+        /// <param name="g">Value of the green channel.</param>
+        /// <param name="b">Value of the blue channel.</param>
         public Color(byte r, byte g, byte b)
             : this()
         {
@@ -232,14 +181,14 @@ namespace LibNoise.Renderer
         #region Utilities
 
         /// <summary>
-        /// Performs linear interpolation between two colors only with rgb channels
+        /// Performs linear interpolation between two colors only with rgb channels.
         /// </summary>
-        /// <param name="color0">The first color</param>
-        /// <param name="color1">The second color</param>
-        /// <param name="t">the amount to interpolate between the two colors</param>
-        /// <param name="withAlphaChannel">Flag indicates if this method also interpolate alpha channel</param>
-        /// <returns>The interpolated color, with the same type of color0</returns>
-        public static IColor Lerp(IColor color0, IColor color1, float t, bool withAlphaChannel)
+        /// <param name="color0">The first color.</param>
+        /// <param name="color1">The second color.</param>
+        /// <param name="t">the amount to interpolate between the two colors.</param>
+        /// <param name="withAlphaChannel">Flag indicates if this method also interpolate alpha channel.</param>
+        /// <returns>The interpolated color, with the same type of color0.</returns>
+        public static IColor Lerp(IColor color0, IColor color1, float t, bool withAlphaChannel = true)
         {
             var color = (IColor) Activator.CreateInstance(color0.GetType());
             color.Red = Libnoise.Lerp(color0.Red, color1.Red, t);
@@ -250,51 +199,35 @@ namespace LibNoise.Renderer
             return color;
         }
 
-
         /// <summary>
-        /// Performs linear interpolation between two colors, including alpha channel
+        /// Performs linear interpolation between two colors, including alpha channel.
         /// </summary>
-        /// <param name="color0">The first color</param>
-        /// <param name="color1">The second color</param>
-        /// <param name="t">the amount to interpolate between the two colors</param>
-        /// <returns>The interpolated color</returns>
-        public static IColor Lerp(IColor color0, IColor color1, float t)
-        {
-            return Lerp(color0, color1, t, true);
-        }
-
-
-        /// <summary>
-        /// Performs linear interpolation between two colors, including alpha channel
-        /// </summary>
-        /// <param name="color0">The first color</param>
-        /// <param name="color1">The second color</param>
-        /// <param name="t">the amount to interpolate between the two colors</param>
-        /// <returns>The interpolated color</returns>
+        /// <param name="color0">The first color.</param>
+        /// <param name="color1">The second color.</param>
+        /// <param name="t">the amount to interpolate between the two colors.</param>
+        /// <returns>The interpolated color.</returns>
         public static IColor Lerp32(IColor color0, IColor color1, float t)
         {
             return Lerp(color0, color1, t, true);
         }
 
-
         /// <summary>
-        /// Performs linear interpolation between two colors only with rgb channels
+        /// Performs linear interpolation between two colors only with rgb channels.
         /// </summary>
-        /// <param name="color0">The first color</param>
-        /// <param name="color1">The second color</param>
-        /// <param name="t">the amount to interpolate between the two colors</param>
-        /// <returns>The interpolated color</returns>
+        /// <param name="color0">The first color.</param>
+        /// <param name="color1">The second color.</param>
+        /// <param name="t">The amount to interpolate between the two colors.</param>
+        /// <returns>The interpolated color.</returns>
         public static IColor Lerp24(IColor color0, IColor color1, float t)
         {
             return Lerp(color0, color1, t, false);
         }
 
-
         /// <summary>
         /// Compute a grayscale value from the source color using Color.GrayscaleLuminosityStrategy.
         /// </summary>
-        /// <param name="color">The source color</param>
-        /// <returns>The grayscale color with the same type as color</returns>
+        /// <param name="color">The source color.</param>
+        /// <returns>The grayscale color with the same type as color.</returns>
         public static IColor Grayscale(IColor color)
         {
             var returnColor = (IColor) Activator.CreateInstance(color.GetType());
@@ -303,30 +236,28 @@ namespace LibNoise.Renderer
             return returnColor;
         }
 
-
         /// <summary>
         /// Compute a grayscale value from the source color using the given Strategy.
         /// </summary>
-        /// <param name="color">The source color</param>
-        /// <param name="Strategy">The grayscale strategy</param>
-        /// <returns>The grayscale color with the same type as color</returns>
-        public static IColor Grayscale(IColor color, GrayscaleStrategy Strategy)
+        /// <param name="color">The source color.</param>
+        /// <param name="strategy">The grayscale strategy.</param>
+        /// <returns>The grayscale color with the same type as color.</returns>
+        public static IColor Grayscale(IColor color, GrayscaleStrategy strategy)
         {
             var returnColor = (IColor) Activator.CreateInstance(color.GetType());
-            byte val = Strategy(color);
+            byte val = strategy(color);
             returnColor.Red = returnColor.Green = returnColor.Blue = val;
             returnColor.Alpha = 255;
             return returnColor;
         }
-
 
         /// <summary>
         /// A GrayscaleStrategy implementation
         /// The lightness strategy averages the most prominent and least prominent colors: 
         /// (max(R, G, B) + min(R, G, B)) / 2.
         /// </summary>
-        /// <param name="color">The source color</param>
-        /// <returns>the computed channel value</returns>
+        /// <param name="color">The source color.</param>
+        /// <returns>The computed channel value.</returns>
         public static byte GrayscaleLightnessStrategy(IColor color)
         {
             return (byte) (
@@ -337,18 +268,16 @@ namespace LibNoise.Renderer
                 );
         }
 
-
         /// <summary>
         /// A GrayscaleStrategy implementation
         /// The average strategy simply averages the values: (R + G + B) / 3.
         /// </summary>
-        /// <param name="color">The source color</param>
-        /// <returns>the computed channel value</returns>
+        /// <param name="color">The source color.</param>
+        /// <returns>the computed channel value.</returns>
         public static byte GrayscaleAverageStrategy(IColor color)
         {
             return (byte) ((color.Red + color.Green + color.Blue)/3);
         }
-
 
         /// <summary>
         /// A GrayscaleStrategy implementation
@@ -357,8 +286,8 @@ namespace LibNoise.Renderer
         /// so green is weighted most heavily. 
         /// The formula for luminosity is 0.21f *R + 0.71f *G + 0.07f *B.
         /// </summary>
-        /// <param name="color">The source color</param>
-        /// <returns>the computed channel value</returns>
+        /// <param name="color">The source color.</param>
+        /// <returns>The computed channel value.</returns>
         public static byte GrayscaleLuminosityStrategy(IColor color)
         {
             return (byte) (0.21f*color.Red + 0.71f*color.Green + 0.07f*color.Blue);
@@ -377,7 +306,6 @@ namespace LibNoise.Renderer
             return String.Format("Color({0},{1},{2},{3})", Red, Green, Blue, Alpha);
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -393,10 +321,8 @@ namespace LibNoise.Renderer
                         && _blue == ((IColor) other).Blue
                         && _alpha == ((IColor) other).Alpha;
             }
-            else
-                return false;
+            return false;
         }
-
 
         /// <summary>
         /// 
@@ -406,7 +332,6 @@ namespace LibNoise.Renderer
         {
             return _hashcode;
         }
-
 
         /// <summary>
         /// Overloading '==' operator:
@@ -419,7 +344,6 @@ namespace LibNoise.Renderer
             return a.Equals(b);
         }
 
-
         /// <summary>
         /// Overloading '!=' operator:
         /// </summary>
@@ -430,7 +354,6 @@ namespace LibNoise.Renderer
         {
             return !a.Equals(b);
         }
-
 
         /// <summary>
         /// Overloading '>' operator:
@@ -447,7 +370,6 @@ namespace LibNoise.Renderer
                     && a._alpha > b.Alpha;
         }
 
-
         /// <summary>
         /// Overloading '<' operator:
         /// </summary>
@@ -463,7 +385,6 @@ namespace LibNoise.Renderer
                     && a._alpha < b.Alpha;
         }
 
-
         /// <summary>
         /// Overloading '>=' operator:
         /// </summary>
@@ -474,7 +395,6 @@ namespace LibNoise.Renderer
         {
             return a > b || a == b;
         }
-
 
         /// <summary>
         /// Overloading '<=' operator:

@@ -33,32 +33,31 @@ namespace LibNoise.Primitive
     /// -1.0 to +1.0, but there are no guarantees that all output values will
     /// exist within that range.
     /// </summary>
-    /// </summary>
     public class SimplexPerlin : ImprovedPerlin, IModule4D, IModule3D, IModule2D
     {
         #region Fields
 
         /// Skewing and unskewing factors for 2D, 3D and 4D, 
         /// some of them pre-multiplied.
-        protected static float F2 = 0.5f*(Libnoise.SQRT_3 - 1.0f);
+        private const float F2 = 0.5f*(Libnoise.Sqrt3 - 1.0f);
 
-        protected static float G2 = (3.0f - Libnoise.SQRT_3)/6.0f;
-        protected static float G22 = G2*2.0f - 1f;
+        private const float G2 = (3.0f - Libnoise.Sqrt3)/6.0f;
+        private const float G22 = G2*2.0f - 1f;
 
-        protected static float F3 = 1.0f/3.0f;
-        protected static float G3 = 1.0f/6.0f;
+        private const float F3 = 1.0f/3.0f;
+        private const float G3 = 1.0f/6.0f;
 
-        protected static float F4 = (Libnoise.SQRT_5 - 1.0f)/4.0f;
-        protected static float G4 = (5.0f - Libnoise.SQRT_5)/20.0f;
-        protected static float G42 = G4*2.0f;
-        protected static float G43 = G4*3.0f;
-        protected static float G44 = G4*4.0f - 1.0f;
+        private const float F4 = (Libnoise.Sqrt5 - 1.0f)/4.0f;
+        private const float G4 = (5.0f - Libnoise.Sqrt5)/20.0f;
+        private const float G42 = G4*2.0f;
+        private const float G43 = G4*3.0f;
+        private const float G44 = G4*4.0f - 1.0f;
 
         /// <summary>
         /// Gradient vectors for 3D (pointing to mid points of all edges of a unit
         /// cube)
         /// </summary>
-        protected static int[][] _grad3 = new[]
+        private static readonly int[][] Grad3 = new[]
         {
             new[] {1, 1, 0}, new[] {-1, 1, 0}, new[] {1, -1, 0},
             new[] {-1, -1, 0}, new[] {1, 0, 1}, new[] {-1, 0, 1},
@@ -70,7 +69,7 @@ namespace LibNoise.Primitive
         /// Gradient vectors for 4D (pointing to mid points of all edges of a unit 4D
         /// hypercube)
         /// </summary>
-        protected static int[][] _grad4 = {
+        private static readonly int[][] Grad4 = {
             new[] {0, 1, 1, 1}, new[] {0, 1, 1, -1}, new[] {0, 1, -1, 1}, new[] {0, 1, -1, -1},
             new[] {0, -1, 1, 1}, new[] {0, -1, 1, -1}, new[] {0, -1, -1, 1}, new[] {0, -1, -1, -1},
             new[] {1, 0, 1, 1}, new[] {1, 0, 1, -1}, new[] {1, 0, -1, 1}, new[] {1, 0, -1, -1},
@@ -85,7 +84,7 @@ namespace LibNoise.Primitive
         /// A lookup table to traverse the simplex around a given point in 4D.
         /// Details can be found where this table is used, in the 4D noise method.
         /// </summary>
-        protected static int[][] _simplex = {
+        private static readonly int[][] Simplex = {
             new[] {0, 1, 2, 3}, new[] {0, 1, 3, 2}, new[] {0, 0, 0, 0}, new[] {0, 2, 3, 1},
             new[] {0, 0, 0, 0}, new[] {0, 0, 0, 0}, new[] {0, 0, 0, 0}, new[] {1, 2, 3, 0},
             new[] {0, 2, 1, 3}, new[] {0, 0, 0, 0}, new[] {0, 3, 1, 2}, new[] {0, 3, 2, 1},
@@ -112,10 +111,9 @@ namespace LibNoise.Primitive
         /// 0-args constructor
         /// </summary>
         public SimplexPerlin()
-            : base(DEFAULT_SEED, DEFAULT_QUALITY)
+            : base(DefaultSeed, DefaultQuality)
         {
         }
-
 
         /// <summary>
         /// Create a new ImprovedPerlin with given values
@@ -191,8 +189,8 @@ namespace LibNoise.Primitive
             if (t0 > 0)
             {
                 t0 *= t0;
-                int gi0 = _random[ii + _random[jj]]%12;
-                n0 = t0*t0*Dot(_grad3[gi0], x0, y0); // (x,y) of grad3 used for
+                int gi0 = Random[ii + Random[jj]]%12;
+                n0 = t0*t0*Dot(Grad3[gi0], x0, y0); // (x,y) of grad3 used for
                 // 2D gradient
             }
 
@@ -201,16 +199,16 @@ namespace LibNoise.Primitive
             if (t1 > 0)
             {
                 t1 *= t1;
-                int gi1 = _random[ii + i1 + _random[jj + j1]]%12;
-                n1 = t1*t1*Dot(_grad3[gi1], x1, y1);
+                int gi1 = Random[ii + i1 + Random[jj + j1]]%12;
+                n1 = t1*t1*Dot(Grad3[gi1], x1, y1);
             }
 
             float t2 = 0.5f - x2*x2 - y2*y2;
             if (t2 > 0)
             {
                 t2 *= t2;
-                int gi2 = _random[ii + 1 + _random[jj + 1]]%12;
-                n2 = t2*t2*Dot(_grad3[gi2], x2, y2);
+                int gi2 = Random[ii + 1 + Random[jj + 1]]%12;
+                n2 = t2*t2*Dot(Grad3[gi2], x2, y2);
             }
 
             // Add contributions from each corner to get the final noise value.
@@ -356,32 +354,32 @@ namespace LibNoise.Primitive
             if (t0 > 0)
             {
                 t0 *= t0;
-                int gi0 = _random[ii + _random[jj + _random[kk]]]%12;
-                n0 = t0*t0*Dot(_grad3[gi0], x0, y0, z0);
+                int gi0 = Random[ii + Random[jj + Random[kk]]]%12;
+                n0 = t0*t0*Dot(Grad3[gi0], x0, y0, z0);
             }
 
             float t1 = 0.6f - x1*x1 - y1*y1 - z1*z1;
             if (t1 > 0)
             {
                 t1 *= t1;
-                int gi1 = _random[ii + i1 + _random[jj + j1 + _random[kk + k1]]]%12;
-                n1 = t1*t1*Dot(_grad3[gi1], x1, y1, z1);
+                int gi1 = Random[ii + i1 + Random[jj + j1 + Random[kk + k1]]]%12;
+                n1 = t1*t1*Dot(Grad3[gi1], x1, y1, z1);
             }
 
             float t2 = 0.6f - x2*x2 - y2*y2 - z2*z2;
             if (t2 > 0)
             {
                 t2 *= t2;
-                int gi2 = _random[ii + i2 + _random[jj + j2 + _random[kk + k2]]]%12;
-                n2 = t2*t2*Dot(_grad3[gi2], x2, y2, z2);
+                int gi2 = Random[ii + i2 + Random[jj + j2 + Random[kk + k2]]]%12;
+                n2 = t2*t2*Dot(Grad3[gi2], x2, y2, z2);
             }
 
             float t3 = 0.6f - x3*x3 - y3*y3 - z3*z3;
             if (t3 > 0)
             {
                 t3 *= t3;
-                int gi3 = _random[ii + 1 + _random[jj + 1 + _random[kk + 1]]]%12;
-                n3 = t3*t3*Dot(_grad3[gi3], x3, y3, z3);
+                int gi3 = Random[ii + 1 + Random[jj + 1 + Random[kk + 1]]]%12;
+                n3 = t3*t3*Dot(Grad3[gi3], x3, y3, z3);
             }
 
             // Add contributions from each corner to get the final noise value.
@@ -463,7 +461,7 @@ namespace LibNoise.Primitive
             // entries make any sense. We use a thresholding to set the coordinates
             // in turn from the largest magnitude. The number 3 in the "simplex"
             // array is at the position of the largest coordinate.
-            int[] sc = _simplex[c];
+            int[] sc = Simplex[c];
 
             i1 = sc[0] >= 3 ? 1 : 0;
             j1 = sc[1] >= 3 ? 1 : 0;
@@ -515,40 +513,48 @@ namespace LibNoise.Primitive
             if (t0 > 0)
             {
                 t0 *= t0;
-                int gi0 = _random[ii + _random[jj + _random[kk + _random[ll]]]]%32;
-                n0 = t0*t0*Dot(_grad4[gi0], x0, y0, z0, w0);
+                int gi0 = Random[ii + Random[jj + Random[kk + Random[ll]]]]%32;
+                n0 = t0*t0*Dot(Grad4[gi0], x0, y0, z0, w0);
             }
 
             float t1 = 0.6f - x1*x1 - y1*y1 - z1*z1 - w1*w1;
             if (t1 > 0)
             {
                 t1 *= t1;
-                int gi1 = _random[ii + i1 + _random[jj + j1 + _random[kk + k1 + _random[ll + l1]]]]%32;
-                n1 = t1*t1*Dot(_grad4[gi1], x1, y1, z1, w1);
+                int gi1 =
+                    Random[
+                        ii + i1 + Random[jj + j1 + Random[kk + k1 + Random[ll + l1]]]]%32;
+                n1 = t1*t1*Dot(Grad4[gi1], x1, y1, z1, w1);
             }
 
             float t2 = 0.6f - x2*x2 - y2*y2 - z2*z2 - w2*w2;
             if (t2 > 0)
             {
                 t2 *= t2;
-                int gi2 = _random[ii + i2 + _random[jj + j2 + _random[kk + k2 + _random[ll + l2]]]]%32;
-                n2 = t2*t2*Dot(_grad4[gi2], x2, y2, z2, w2);
+                int gi2 =
+                    Random[
+                        ii + i2 + Random[jj + j2 + Random[kk + k2 + Random[ll + l2]]]]%32;
+                n2 = t2*t2*Dot(Grad4[gi2], x2, y2, z2, w2);
             }
 
             float t3 = 0.6f - x3*x3 - y3*y3 - z3*z3 - w3*w3;
             if (t3 > 0)
             {
                 t3 *= t3;
-                int gi3 = _random[ii + i3 + _random[jj + j3 + _random[kk + k3 + _random[ll + l3]]]]%32;
-                n3 = t3*t3*Dot(_grad4[gi3], x3, y3, z3, w3);
+                int gi3 =
+                    Random[
+                        ii + i3 + Random[jj + j3 + Random[kk + k3 + Random[ll + l3]]]]%32;
+                n3 = t3*t3*Dot(Grad4[gi3], x3, y3, z3, w3);
             }
 
             float t4 = 0.6f - x4*x4 - y4*y4 - z4*z4 - w4*w4;
             if (t4 > 0)
             {
                 t4 *= t4;
-                int gi4 = _random[ii + 1 + _random[jj + 1 + _random[kk + 1 + _random[ll + 1]]]]%32;
-                n4 = t4*t4*Dot(_grad4[gi4], x4, y4, z4, w4);
+                int gi4 =
+                    Random[ii + 1 + Random[jj + 1 + Random[kk + 1 + Random[ll + 1]]]
+                        ]%32;
+                n4 = t4*t4*Dot(Grad4[gi4], x4, y4, z4, w4);
             }
 
             // Sum up and scale the result to cover the range [-1,1]
@@ -560,40 +566,38 @@ namespace LibNoise.Primitive
         /// <summary>
         /// Computes dot product in 4D.
         /// </summary>
-        /// <param name="g"4-vector (grid offset)</param>
-        /// <param name="x">x coordinates</param>
-        /// <param name="y">y coordinates</param>
-        /// <param name="z">z coordinates</param>
-        /// <param name="t">t coordinates</param>
-        /// <returns>dot product</returns>
-        protected float Dot(int[] g, float x, float y, float z, float t)
+        /// <param name="g">4-vector (grid offset).</param>
+        /// <param name="x">X coordinates.</param>
+        /// <param name="y">Y coordinates.</param>
+        /// <param name="z">Z coordinates.</param>
+        /// <param name="t">T coordinates.</param>
+        /// <returns>Dot product.</returns>
+        protected static float Dot(int[] g, float x, float y, float z, float t)
         {
             return g[0]*x + g[1]*y + g[2]*z + g[3]*t;
         }
 
-
         /// <summary>
         /// Computes dot product in 3D.
         /// </summary>
-        /// <param name="g"3-vector (grid offset)</param>
-        /// <param name="x">x coordinates</param>
-        /// <param name="y">y coordinates</param>
-        /// <param name="z">z coordinates</param>
-        /// <returns>dot product</returns>
-        protected float Dot(int[] g, float x, float y, float z)
+        /// <param name="g">3-vector (grid offset).</param>
+        /// <param name="x">X coordinates.</param>
+        /// <param name="y">Y coordinates.</param>
+        /// <param name="z">Z coordinates.</param>
+        /// <returns>Dot product.</returns>
+        protected static float Dot(int[] g, float x, float y, float z)
         {
             return g[0]*x + g[1]*y + g[2]*z;
         }
 
-
         /// <summary>
         /// Computes dot product in 2D.
         /// </summary>
-        /// <param name="g">2-vector (grid offset)</param>
-        /// <param name="x">x coordinates</param>
-        /// <param name="y">y coordinates</param>
-        /// <returns>dot product</returns>
-        protected float Dot(int[] g, float x, float y)
+        /// <param name="g">2-vector (grid offset).</param>
+        /// <param name="x">X coordinates.</param>
+        /// <param name="y">Y coordinates.</param>
+        /// <returns>Dot product.</returns>
+        protected static float Dot(int[] g, float x, float y)
         {
             return g[0]*x + g[1]*y;
         }

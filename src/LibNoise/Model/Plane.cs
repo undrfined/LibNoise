@@ -67,7 +67,7 @@ namespace LibNoise.Model
         /// <returns>The output value from the noise module</returns>
         public float GetValue(float x, float z)
         {
-            return ((IModule3D) _sourceModule).GetValue(x, 0.0f, z);
+            return ((IModule3D) PSourceModule).GetValue(x, 0.0f, z);
         }
 
         #endregion

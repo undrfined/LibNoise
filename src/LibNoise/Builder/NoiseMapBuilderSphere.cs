@@ -169,63 +169,63 @@ namespace LibNoise.Builder
                     "Incoherent bounds : southLatBound >= northLatBound or westLonBound >= eastLonBound");
             }
 
-            if (_width < 0 || _height < 0)
+            if (PWidth < 0 || PHeight < 0)
                 throw new ArgumentException("Dimension must be greater or equal 0");
 
-            if (_sourceModule == null)
+            if (PSourceModule == null)
                 throw new ArgumentException("A source module must be provided");
 
-            if (_noiseMap == null)
+            if (PNoiseMap == null)
                 throw new ArgumentException("A noise map must be provided");
 
             // Resize the destination noise map so that it can store the new output
             // values from the source model.
-            _noiseMap.SetSize(_width, _height);
+            PNoiseMap.SetSize(PWidth, PHeight);
 
             // Create the plane model.
-            var model = new Sphere((IModule3D) _sourceModule);
+            var model = new Sphere((IModule3D) PSourceModule);
 
             float lonExtent = _eastLonBound - _westLonBound;
             float latExtent = _northLatBound - _southLatBound;
 
-            float xDelta = lonExtent/_width;
-            float yDelta = latExtent/_height;
+            float xDelta = lonExtent/PWidth;
+            float yDelta = latExtent/PHeight;
 
             float curLon = _westLonBound;
             float curLat = _southLatBound;
 
             // Fill every point in the noise map with the output values from the model.
-            for (int y = 0; y < _height; y++)
+            for (int y = 0; y < PHeight; y++)
             {
                 curLon = _westLonBound;
 
-                for (int x = 0; x < _width; x++)
+                for (int x = 0; x < PWidth; x++)
                 {
                     float finalValue;
                     var level = FilterLevel.Source;
 
-                    if (_filter != null)
-                        level = _filter.IsFiltered(x, y);
+                    if (PFilter != null)
+                        level = PFilter.IsFiltered(x, y);
 
                     if (level == FilterLevel.Constant)
-                        finalValue = _filter.ConstantValue;
+                        finalValue = PFilter.ConstantValue;
                     else
                     {
                         finalValue = model.GetValue(curLat, curLon);
 
                         if (level == FilterLevel.Filter)
-                            finalValue = _filter.FilterValue(x, y, finalValue);
+                            finalValue = PFilter.FilterValue(x, y, finalValue);
                     }
 
-                    _noiseMap.SetValue(x, y, finalValue);
+                    PNoiseMap.SetValue(x, y, finalValue);
 
                     curLon += xDelta;
                 }
 
                 curLat += yDelta;
 
-                if (_callBack != null)
-                    _callBack(y);
+                if (PCallBack != null)
+                    PCallBack(y);
             }
         }
 

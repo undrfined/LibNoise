@@ -20,7 +20,7 @@ namespace LibNoise
     using System;
 
     /// <summary>
-    /// 
+    /// Libnoise
     /// </summary>
     public static class Libnoise
     {
@@ -29,57 +29,56 @@ namespace LibNoise
         /// <summary>
         /// Version
         /// </summary>
-        public const string VERSION = "1.0.0 B";
+        public const string Version = "1.0.0 B";
 
         /// <summary>
         /// Pi
         /// </summary>
-        public const float PI = 3.1415926535897932385f;
+        public const float Pi = 3.1415926535897932385f;
 
         /// <summary>
         /// Square root of 2.
         /// </summary>
-        public const float SQRT_2 = 1.4142135623730950488f;
+        public const float Sqrt2 = 1.4142135623730950488f;
 
         /// <summary>
         /// Square root of 3.
         /// </summary>
-        public const float SQRT_3 = 1.7320508075688772935f;
+        public const float Sqrt3 = 1.7320508075688772935f;
 
         /// <summary>
         /// Square root of 5.
         /// </summary>
-        public const float SQRT_5 = 2.2360679774997896964f;
+        public const float Sqrt5 = 2.2360679774997896964f;
 
         /// <summary>
         /// Converts an angle from degrees to radians.
         /// </summary>
-        public const float DEG2RAD = PI/180.0f;
+        public const float Deg2Rad = Pi/180.0f;
 
         /// <summary>
         /// Converts an angle from radians to degrees.
         /// </summary>
-        public const float RAD2DEG = 1.0f/DEG2RAD;
+        public const float Rad2Deg = 1.0f/Deg2Rad;
 
         #endregion
 
         #region Misc
 
         /// <summary>
-        /// Converts latitude/longitude coordinates on a unit sphere into 3D Cartesian coordinates.
-        /// 
+        /// Converts latitude/longitude coordinates on a unit sphere into 3D Cartesian coordinates. 
         /// </summary>
-        /// <param name="lat">The latitude, in degrees. Must range from -90 to +90</param>
-        /// <param name="lon">The longitude, in degrees. Must range from -180 to +180</param>
-        /// <param name="x">By ref, this parameter contains the x coordinate</param>
-        /// <param name="y">By ref, this parameter contains the y coordinate</param>
-        /// <param name="z">By ref, this parameter contains the z coordinate</param>
+        /// <param name="lat">The latitude, in degrees. Must range from -90 to +90.</param>
+        /// <param name="lon">The longitude, in degrees. Must range from -180 to +180.</param>
+        /// <param name="x">By ref, this parameter contains the x coordinate.</param>
+        /// <param name="y">By ref, this parameter contains the y coordinate.</param>
+        /// <param name="z">By ref, this parameter contains the z coordinate.</param>
         public static void LatLonToXYZ(float lat, float lon, ref float x, ref float y, ref float z)
         {
-            var r = (float) Math.Cos(DEG2RAD*lat);
-            x = r*(float) Math.Cos(DEG2RAD*lon);
-            y = (float) Math.Sin(DEG2RAD*lat);
-            z = r*(float) Math.Sin(DEG2RAD*lon);
+            var r = (float) Math.Cos(Deg2Rad*lat);
+            x = r*(float) Math.Cos(Deg2Rad*lon);
+            y = (float) Math.Sin(Deg2Rad*lat);
+            z = r*(float) Math.Sin(Deg2Rad*lon);
         }
 
         #endregion
@@ -94,9 +93,9 @@ namespace LibNoise
         /// function returns n1.
         /// </summary>
         /// <param name="n0">The first value.</param>
-        /// <param name="n1">The second value</param>
-        /// <param name="a">the amount to interpolate between the two values</param>
-        /// <returns>The interpolated value</returns>
+        /// <param name="n1">The second value.</param>
+        /// <param name="a">the amount to interpolate between the two values.</param>
+        /// <returns>The interpolated value.</returns>
         public static byte Lerp(byte n0, byte n1, float a)
         {
             float c0 = n0/255.0f;
@@ -104,7 +103,6 @@ namespace LibNoise
 
             return (byte) ((c0 + a*(c1 - c0))*255.0f);
         }
-
 
         /// <summary>
         /// Performs linear interpolation between two float-values by a.
@@ -114,15 +112,14 @@ namespace LibNoise
         /// function returns n1.
         /// </summary>
         /// <param name="n0">The first value.</param>
-        /// <param name="n1">The second value</param>
-        /// <param name="a">the amount to interpolate between the two values</param>
-        /// <returns>The interpolated value</returns>
+        /// <param name="n1">The second value.</param>
+        /// <param name="a">The amount to interpolate between the two values.</param>
+        /// <returns>The interpolated value.</returns>
         public static float Lerp(float n0, float n1, float a)
         {
             //return ((1.0 - a) * n0) + (a * n1);
             return n0 + a*(n1 - n0);
         }
-
 
         /// <summary>
         /// Performs cubic interpolation between two values bound between two other values.
@@ -131,11 +128,11 @@ namespace LibNoise
         /// 0.0, this function returns n1.  If the amount value is 1.0, this
         /// function returns n2.
         /// </summary>
-        /// <param name="n0">The value before the first value</param>
-        /// <param name="n1">The first value</param>
-        /// <param name="n2">The second value</param>
-        /// <param name="n3">The value after the second value</param>
-        /// <param name="a">the amount to interpolate between the two values</param>
+        /// <param name="n0">The value before the first value.</param>
+        /// <param name="n1">The first value.</param>
+        /// <param name="n2">The second value.</param>
+        /// <param name="n3">The value after the second value.</param>
+        /// <param name="a">The amount to interpolate between the two values.</param>
         /// <returns>The interpolated value.</returns>
         public static float Cerp(float n0, float n1, float n2, float n3, float a)
         {
@@ -146,28 +143,26 @@ namespace LibNoise
             return p*a*a*a + q*a*a + r*a + s;
         }
 
-
         /// <summary>
         /// Maps a value onto a cubic S-curve.
         /// a should range from 0.0 to 1.0.
         /// The derivitive of a cubic S-curve is zero at a = 0.0 and a = 1.0
         /// </summary>
-        /// <param name="a">The value to map onto a cubic S-curve</param>
-        /// <returns>The mapped value</returns>
+        /// <param name="a">The value to map onto a cubic S-curve.</param>
+        /// <returns>The mapped value.</returns>
         public static float SCurve3(float a)
         {
             return (a*a*(3.0f - 2.0f*a));
         }
 
-
         /// <summary>
         /// Maps a value onto a quintic S-curve.
         /// a should range from 0.0 to 1.0.
-        /// The first derivitive of a quintic S-curve is zero at a = 0.0 and a = 1.0
-        /// The second derivitive of a quintic S-curve is zero at a = 0.0 and a = 1.0
+        /// The first derivitive of a quintic S-curve is zero at a = 0.0 and a = 1.0.
+        /// The second derivitive of a quintic S-curve is zero at a = 0.0 and a = 1.0.
         /// </summary>
-        /// <param name="a">The value to map onto a quintic S-curve</param>
-        /// <returns>The mapped value</returns>
+        /// <param name="a">The value to map onto a quintic S-curve.</param>
+        /// <returns>The mapped value.</returns>
         public static float SCurve5(float a)
         {
             return a*a*a*(a*(a*6.0f - 15.0f) + 10.0f);
@@ -201,52 +196,43 @@ namespace LibNoise
         {
             if (value < lowerBound)
                 return lowerBound;
-            else if (value > upperBound)
+            if (value > upperBound)
                 return upperBound;
-            else
-                return value;
+            return value;
         }
-
 
         public static float Clamp(float value, float lowerBound, float upperBound)
         {
             if (value < lowerBound)
                 return lowerBound;
-            else if (value > upperBound)
+            if (value > upperBound)
                 return upperBound;
-            else
-                return value;
+            return value;
         }
-
 
         public static double Clamp(double value, double lowerBound, double upperBound)
         {
             if (value < lowerBound)
                 return lowerBound;
-            else if (value > upperBound)
+            if (value > upperBound)
                 return upperBound;
-            else
-                return value;
+            return value;
         }
-
 
         public static int Clamp01(int value)
         {
             return Clamp(value, 0, 1);
         }
 
-
         public static float Clamp01(float value)
         {
             return Clamp(value, 0, 1);
         }
 
-
         public static double Clamp01(double value)
         {
             return Clamp(value, 0, 1);
         }
-
 
         /// <summary>
         /// Swaps two values.
@@ -262,24 +248,20 @@ namespace LibNoise
             b = c;
         }
 
-
         public static void SwapValues(ref double a, ref double b)
         {
             SwapValues<double>(ref a, ref b);
         }
-
 
         public static void SwapValues(ref int a, ref int b)
         {
             SwapValues<int>(ref a, ref b);
         }
 
-
         public static void SwapValues(ref float a, ref float b)
         {
             SwapValues<float>(ref a, ref b);
         }
-
 
         /// <summary>
         /// Modifies a floating-point value so that it can be stored in a
@@ -294,25 +276,23 @@ namespace LibNoise
         /// resulting value may differ between platforms.  By using this function,
         /// you ensure that the resulting value is identical between platforms.
         /// </summary>
-        /// <param name="value">A floating-point number</param>
-        /// <returns>The modified floating-point number</returns>
+        /// <param name="value">A floating-point number.</param>
+        /// <returns>The modified floating-point number.</returns>
         public static double ToInt32Range(double value)
         {
             if (value >= 1073741824.0)
                 return (2.0*Math.IEEERemainder(value, 1073741824.0)) - 1073741824.0;
-            else if (value <= -1073741824.0)
+            if (value <= -1073741824.0)
                 return (2.0*Math.IEEERemainder(value, 1073741824.0)) + 1073741824.0;
-            else
-                return value;
+            return value;
         }
-
 
         /// <summary>
         /// Unpack the given integer (int32) value to an array of 4 bytes in big endian format.
         /// If the length of the buffer is too smal, it wil be resized.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="convert">the output buffer</param>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The output buffer.</param>
         public static byte[] UnpackBigUint32(int value, ref byte[] buffer)
         {
             if (buffer.Length < 4)
@@ -326,14 +306,12 @@ namespace LibNoise
             return buffer;
         }
 
-
-
         /// <summary>
         /// Unpack the given float to an array of 4 bytes in big endian format.
         /// If the length of the buffer is too smal, it wil be resized.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="convert">the output buffer</param>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The output buffer.</param>
         public static byte[] UnpackBigFloat(float value, ref byte[] buffer)
         {
             throw new NotImplementedException();
@@ -351,14 +329,12 @@ namespace LibNoise
 			*/
         }
 
-
-
         /// <summary>
         /// Unpack the given short (int16) value to an array of 2 bytes in big endian format.
         /// If the length of the buffer is too smal, it wil be resized.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="convert">the output buffer</param>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The output buffer.</param>
         public static byte[] UnpackBigUint16(short value, ref byte[] buffer)
         {
             if (buffer.Length < 2)
@@ -370,14 +346,12 @@ namespace LibNoise
             return buffer;
         }
 
-
-
         /// <summary>
         /// Unpack the given short (int16) to an array of 2 bytes  in little endian format.
         /// If the length of the buffer is too smal, it wil be resized.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="convert">the output buffer</param>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The output buffer.</param>
         public static byte[] UnpackLittleUint16(short value, ref byte[] buffer)
         {
             if (buffer.Length < 2)
@@ -389,14 +363,12 @@ namespace LibNoise
             return buffer;
         }
 
-
-
         /// <summary>
         /// Unpack the given integer (int32) to an array of 4 bytes  in little endian format.
         /// If the length of the buffer is too smal, it wil be resized.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="convert">the output buffer</param>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The output buffer.</param>
         public static byte[] UnpackLittleUint32(int value, ref byte[] buffer)
         {
             if (buffer.Length < 4)
@@ -410,14 +382,12 @@ namespace LibNoise
             return buffer;
         }
 
-
-
         /// <summary>
         /// Unpack the given float (int32) to an array of 4 bytes  in little endian format.
         /// If the length of the buffer is too smal, it wil be resized.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="convert">the output buffer</param>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The output buffer.</param>
         public static byte[] UnpackLittleFloat(float value, ref byte[] buffer)
         {
             throw new NotImplementedException();
@@ -436,8 +406,6 @@ namespace LibNoise
 */
         }
 
-
-
         /// <summary>
         /// faster methid than using (int)Math.floor(x).
         /// </summary>
@@ -447,11 +415,10 @@ namespace LibNoise
             return x >= 0 ? (int) x : (int) x - 1;
         }
 
-
         /// <summary>
         /// faster methid than using (int)Math.floor(x).
         /// </summary>
-        /// <param name="x"></param>
+        /// <param name="x">The x.</param>
         public static int FastFloor(float x)
         {
             return x >= 0 ? (int) x : (int) x - 1;

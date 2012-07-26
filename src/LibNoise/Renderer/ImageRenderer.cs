@@ -15,7 +15,6 @@
 // 
 // From the original Jason Bevins's Libnoise (http://libnoise.sourceforge.net)
 
-
 namespace LibNoise.Renderer
 {
     using System;
@@ -107,10 +106,10 @@ namespace LibNoise.Renderer
     /// <b>Rendering the image</b>
     ///
     /// To render the image, perform the following steps:
-    /// - Pass a GradientColor object to the Gradient property.
-    /// - Pass a IMap2D<float> object to the NoiseMap property.
-    /// - Pass an IMap2D<Color> object to the Image property.
-    /// - Pass an Image object to the BackgroundImage property (optional)
+    /// - Pass a <see cref="GradientColor"/> object to the Gradient property.
+    /// - Pass a <see cref="IMap2D{Single}"/> object to the NoiseMap property.
+    /// - Pass an <see cref="IMap2D{Color}"/> object to the Image property.
+    /// - Pass an <see cref="Image"/> object to the BackgroundImage property (optional)
     /// - Call the Render() method.
     /// </summary>
     public class ImageRenderer : AbstractImageRenderer
@@ -120,12 +119,12 @@ namespace LibNoise.Renderer
         /// <summary>
         /// A flag specifying whether wrapping is enabled.
         /// </summary>
-        private bool _WrapEnabled;
+        private bool _wrapEnabled;
 
         /// <summary>
         /// The background image
         /// </summary>
-        protected Image _backgroundImage;
+        private Image _backgroundImage;
 
         /// <summary>
         /// The cosine of the azimuth of the light source.
@@ -140,7 +139,7 @@ namespace LibNoise.Renderer
         /// <summary>
         /// The gradient color
         /// </summary>
-        protected GradientColor _gradient;
+        private GradientColor _gradient;
 
         /// <summary>
         /// The azimuth of the light source, in degrees.
@@ -228,8 +227,8 @@ namespace LibNoise.Renderer
         /// </summary>
         public bool WrapEnabled
         {
-            get { return _WrapEnabled; }
-            set { _WrapEnabled = value; }
+            get { return _wrapEnabled; }
+            set { _wrapEnabled = value; }
         }
 
         /// <summary>
@@ -365,13 +364,13 @@ namespace LibNoise.Renderer
         public ImageRenderer()
         {
             _lightEnabled = false;
-            _WrapEnabled = false;
+            _wrapEnabled = false;
             _lightAzimuth = 45.0f;
             _lightBrightness = 1.0f;
             _lightContrast = 1.0f;
             _lightElevation = 45.0f;
             _lightIntensity = 1.0f;
-            _lightColor = Color.WHITE;
+            _lightColor = Colors.White;
             _recalcLightValues = true;
         }
 
@@ -431,7 +430,7 @@ namespace LibNoise.Renderer
             if (!_image.Equals(_backgroundImage))
                 _image.SetSize(width, height);
 
-            IColor backgroundColor = Color.WHITE;
+            IColor backgroundColor = Colors.White;
             IColor sourceColor;
             float pSource;
 
@@ -455,7 +454,7 @@ namespace LibNoise.Renderer
                         int xLeftOffset, xRightOffset;
                         int yUpOffset, yDownOffset;
 
-                        if (_WrapEnabled)
+                        if (_wrapEnabled)
                         {
                             if (x == 0)
                             {
@@ -623,7 +622,6 @@ namespace LibNoise.Renderer
                 );
         }
 
-
         /// <summary>
         /// Calculates the intensity of the light given some elevation values.
         /// </summary>
@@ -640,18 +638,18 @@ namespace LibNoise.Renderer
             // called.
             if (_recalcLightValues)
             {
-                _cosAzimuth = (float) Math.Cos(_lightAzimuth*Libnoise.DEG2RAD);
-                _sinAzimuth = (float) Math.Sin(_lightAzimuth*Libnoise.DEG2RAD);
-                _cosElevation = (float) Math.Cos(_lightElevation*Libnoise.DEG2RAD);
-                _sinElevation = (float) Math.Sin(_lightElevation*Libnoise.DEG2RAD);
+                _cosAzimuth = (float) Math.Cos(_lightAzimuth*Libnoise.Deg2Rad);
+                _sinAzimuth = (float) Math.Sin(_lightAzimuth*Libnoise.Deg2Rad);
+                _cosElevation = (float) Math.Cos(_lightElevation*Libnoise.Deg2Rad);
+                _sinElevation = (float) Math.Sin(_lightElevation*Libnoise.Deg2Rad);
                 _recalcLightValues = false;
             }
 
             // Now do the lighting calculations.
-            const float I_MAX = 1.0f;
-            float io = I_MAX*Libnoise.SQRT_2*_sinElevation/2.0f;
-            float ix = (I_MAX - io)*_lightContrast*Libnoise.SQRT_2*_cosElevation*_cosAzimuth;
-            float iy = (I_MAX - io)*_lightContrast*Libnoise.SQRT_2*_cosElevation*_sinAzimuth;
+            const float iMax = 1.0f;
+            float io = iMax*Libnoise.Sqrt2*_sinElevation/2.0f;
+            float ix = (iMax - io)*_lightContrast*Libnoise.Sqrt2*_cosElevation*_cosAzimuth;
+            float iy = (iMax - io)*_lightContrast*Libnoise.Sqrt2*_cosElevation*_sinAzimuth;
             float intensity = (ix*(left - right) + iy*(down - up) + io);
 
             if (intensity < 0.0)

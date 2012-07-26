@@ -77,7 +77,7 @@ namespace LibNoise.Model
         {
             float x = 0.0f, y = 0.0f, z = 0.0f;
             Libnoise.LatLonToXYZ(lat, lon, ref x, ref y, ref z);
-            return ((IModule3D) _sourceModule).GetValue(x, y, z);
+            return ((IModule3D) PSourceModule).GetValue(x, y, z);
         }
 
         #endregion
