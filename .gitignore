@@ -87,3 +87,7 @@ obj
 
 # mstest test results
 TestResults
+
+# NAnt build artifacts
+dist
+build
