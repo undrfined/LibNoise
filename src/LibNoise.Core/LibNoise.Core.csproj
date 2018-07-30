@@ -1,0 +1,313 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{79091D20-2EAF-431F-8017-AA0D70B60827}</ProjectGuid>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LibNoise</RootNamespace>
+    <AssemblyName>LibNoise</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\debug\Core\LibNoise\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;Core</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\output\debug\Core\LibNoise\LibNoise.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\output\release\Core\LibNoise\</OutputPath>
+    <DefineConstants>TRACE;Core</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\output\release\Core\LibNoise\LibNoise.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\LibNoise.NET35\Builder\IBuilderFilter.cs">
+      <Link>Builder\IBuilderFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Builder\NoiseMap.cs">
+      <Link>Builder\NoiseMap.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Builder\NoiseMapBuilder.cs">
+      <Link>Builder\NoiseMapBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Builder\NoiseMapBuilderCylinder.cs">
+      <Link>Builder\NoiseMapBuilderCylinder.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Builder\NoiseMapBuilderPlane.cs">
+      <Link>Builder\NoiseMapBuilderPlane.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Builder\NoiseMapBuilderSphere.cs">
+      <Link>Builder\NoiseMapBuilderSphere.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Builder\ShapeFilter.cs">
+      <Link>Builder\ShapeFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\CombinerModule.cs">
+      <Link>CombinerModule.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Combiner\Add.cs">
+      <Link>Combiner\Add.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Combiner\Max.cs">
+      <Link>Combiner\Max.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Combiner\Min.cs">
+      <Link>Combiner\Min.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Combiner\Multiply.cs">
+      <Link>Combiner\Multiply.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Combiner\Power.cs">
+      <Link>Combiner\Power.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Combiner\Substract.cs">
+      <Link>Combiner\Substract.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\FilterModule.cs">
+      <Link>FilterModule.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Filter\Billow.cs">
+      <Link>Filter\Billow.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Filter\HeterogeneousMultiFractal.cs">
+      <Link>Filter\HeterogeneousMultiFractal.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Filter\HybridMultiFractal.cs">
+      <Link>Filter\HybridMultiFractal.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Filter\MultiFractal.cs">
+      <Link>Filter\MultiFractal.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Filter\Pipe.cs">
+      <Link>Filter\Pipe.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Filter\RidgedMultiFractal.cs">
+      <Link>Filter\RidgedMultiFractal.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Filter\SinFractal.cs">
+      <Link>Filter\SinFractal.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Filter\SumFractal.cs">
+      <Link>Filter\SumFractal.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Filter\Voronoi.cs">
+      <Link>Filter\Voronoi.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\IMap2D.cs">
+      <Link>IMap2D.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\IModule1D.cs">
+      <Link>IModule1D.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\IModule2D.cs">
+      <Link>IModule2D.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\IModule3D.cs">
+      <Link>IModule3D.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\IModule4D.cs">
+      <Link>IModule4D.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Libnoise.cs">
+      <Link>Libnoise.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Model\AbstractModel.cs">
+      <Link>Model\AbstractModel.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Model\Cylinder.cs">
+      <Link>Model\Cylinder.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Model\Line.cs">
+      <Link>Model\Line.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Model\Plane.cs">
+      <Link>Model\Plane.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Model\Sphere.cs">
+      <Link>Model\Sphere.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\ModifierModule.cs">
+      <Link>ModifierModule.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Modifier\Abs.cs">
+      <Link>Modifier\Abs.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Modifier\Cache.cs">
+      <Link>Modifier\Cache.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Modifier\Clamp.cs">
+      <Link>Modifier\Clamp.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Modifier\ControlPoint.cs">
+      <Link>Modifier\ControlPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Modifier\Curve.cs">
+      <Link>Modifier\Curve.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Modifier\Exponent.cs">
+      <Link>Modifier\Exponent.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Modifier\Invert.cs">
+      <Link>Modifier\Invert.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Modifier\ScaleBias.cs">
+      <Link>Modifier\ScaleBias.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Modifier\Terrace.cs">
+      <Link>Modifier\Terrace.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Module.cs">
+      <Link>Module.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\NoiseFilter.cs">
+      <Link>NoiseFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\NoisePrimitive.cs">
+      <Link>NoisePrimitive.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\NoiseQuality.cs">
+      <Link>NoiseQuality.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\PrimitiveModule.cs">
+      <Link>PrimitiveModule.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Primitive\BevinsGradient.cs">
+      <Link>Primitive\BevinsGradient.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Primitive\BevinsValue.cs">
+      <Link>Primitive\BevinsValue.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Primitive\Checkerboard.cs">
+      <Link>Primitive\Checkerboard.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Primitive\Constant.cs">
+      <Link>Primitive\Constant.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Primitive\Cylinders.cs">
+      <Link>Primitive\Cylinders.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Primitive\ImprovedPerlin.cs">
+      <Link>Primitive\ImprovedPerlin.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Primitive\SimplexPerlin.cs">
+      <Link>Primitive\SimplexPerlin.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Primitive\Spheres.cs">
+      <Link>Primitive\Spheres.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\AbstractHeightmapRenderer.cs">
+      <Link>Renderer\AbstractHeightmapRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\AbstractImageRenderer.cs">
+      <Link>Renderer\AbstractImageRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\AbstractRenderer.cs">
+      <Link>Renderer\AbstractRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\Color.cs">
+      <Link>Renderer\Color.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\Colors.cs">
+      <Link>Renderer\Colors.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\GradientColor.cs">
+      <Link>Renderer\GradientColor.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\GradientPoint.cs">
+      <Link>Renderer\GradientPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\Heightmap16.cs">
+      <Link>Renderer\Heightmap16.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\Heightmap16Renderer.cs">
+      <Link>Renderer\Heightmap16Renderer.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\Heightmap32.cs">
+      <Link>Renderer\Heightmap32.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\Heightmap32Renderer.cs">
+      <Link>Renderer\Heightmap32Renderer.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\Heightmap8.cs">
+      <Link>Renderer\Heightmap8.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\Heightmap8Renderer.cs">
+      <Link>Renderer\Heightmap8Renderer.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\IColor.cs">
+      <Link>Renderer\IColor.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\Image.cs">
+      <Link>Renderer\Image.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\ImageRenderer.cs">
+      <Link>Renderer\ImageRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Renderer\NormalMapRenderer.cs">
+      <Link>Renderer\NormalMapRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\SelectorModule.cs">
+      <Link>SelectorModule.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Selector\Blend.cs">
+      <Link>Selector\Blend.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Selector\Select.cs">
+      <Link>Selector\Select.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\TransformerModule.cs">
+      <Link>TransformerModule.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Transformer\Displace.cs">
+      <Link>Transformer\Displace.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Transformer\RotatePoint.cs">
+      <Link>Transformer\RotatePoint.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Transformer\ScalePoint.cs">
+      <Link>Transformer\ScalePoint.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Transformer\TranslatePoint.cs">
+      <Link>Transformer\TranslatePoint.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Transformer\Turbulence.cs">
+      <Link>Transformer\Turbulence.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Utils\DataMap.cs">
+      <Link>Utils\DataMap.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Writer\AbstractWriter.cs">
+      <Link>Writer\AbstractWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Writer\BMPWriter.cs">
+      <Link>Writer\BMPWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Writer\Heightmap16RawWriter.cs">
+      <Link>Writer\Heightmap16RawWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Writer\Heightmap32RawWriter.cs">
+      <Link>Writer\Heightmap32RawWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\LibNoise.NET35\Writer\Heightmap8RawWriter.cs">
+      <Link>Writer\Heightmap8RawWriter.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Ext\Dotnet\" />
+    <Folder Include="Ext\Unity3D\" />
+    <Folder Include="Ext\Xna\" />
+  </ItemGroup>
+</Project>
